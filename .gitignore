@@ -2,3 +2,6 @@
 
 # node modules
 web/node_modules
+
+# next services
+web/.next
