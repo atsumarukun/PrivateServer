@@ -15,6 +15,7 @@ services:
   api:
     image: golang
     volumes:
-      - ./api:/opt/api
-    working_dir: /opt/api
+      - ./api:/go/src/api
+    working_dir: /go/src/api
+    privileged: true
     command: go run main.go

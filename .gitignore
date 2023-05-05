@@ -5,3 +5,9 @@ web/node_modules
 
 # next services
 web/.next
+
+
+# api
+
+# private key
+api/PrivateServer
