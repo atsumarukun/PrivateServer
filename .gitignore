@@ -6,8 +6,14 @@ web/node_modules
 # next services
 web/.next
 
+# environment file
+web/.env
+
 
 # api
 
 # private key
 api/PrivateServer
+
+# environment file
+api/.env
