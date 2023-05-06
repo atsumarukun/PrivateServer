@@ -17,3 +17,6 @@ api/PrivateServer
 
 # environment file
 api/.env
+
+# static storage
+api/storage
