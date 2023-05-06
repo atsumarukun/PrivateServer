@@ -20,6 +20,11 @@ func Router() *gin.Engine {
 			ctrl := controllers.PowerController{}
 			p.GET("/shutdown", ctrl.Shutdown)
 		}
+		s := v.Group("/storage")
+		{
+			ctrl := controllers.StorageController{}
+			s.GET("/", ctrl.Get)
+		}
 	}
 
 	return r

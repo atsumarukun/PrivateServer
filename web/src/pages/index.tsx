@@ -1,9 +1,9 @@
-import { Text } from "@chakra-ui/react";
+import MenuCard from "@/components/parts/MenuCard";
 
 export default function Home() {
   return (
     <main>
-      <Text>This is index page.</Text>
+      <MenuCard />
     </main>
   );
 }
