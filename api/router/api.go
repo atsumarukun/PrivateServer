@@ -7,6 +7,7 @@ import (
 
 func init() {
 	r := Router()
+	r.Static("/storage", "/go/src/api/storage")
 	r.Run(":8000")
 }
 

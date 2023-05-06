@@ -17,5 +17,6 @@ services:
     volumes:
       - ./api:/go/src/api
     working_dir: /go/src/api
-    privileged: true
+    ports:
+      - 8000:8000
     command: go run main.go
