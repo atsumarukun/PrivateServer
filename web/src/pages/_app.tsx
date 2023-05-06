@@ -7,7 +7,7 @@ import { ChakraProvider, Container } from "@chakra-ui/react";
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider>
-      <Container maxW="80%">
+      <Container maxW="80%" p="0">
         <Header />
         <Component {...pageProps} />
       </Container>

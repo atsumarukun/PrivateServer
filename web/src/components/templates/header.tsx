@@ -80,7 +80,13 @@ function PowerButton() {
 export default function Header() {
   return (
     <header>
-      <HStack py="5" justifyContent="space-between" position="fixed" w="80%">
+      <HStack
+        py="5"
+        justifyContent="space-between"
+        position="fixed"
+        left="10%"
+        right="10%"
+      >
         <Link href="/">
           <Text fontSize="20" fontWeight="300">
             PrivateServer
