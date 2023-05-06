@@ -3,7 +3,10 @@ import ImageCard from "@/components/parts/ImageCard";
 import { StorageProps } from "@/constants/props";
 import { Grid } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { IconType } from "react-icons";
 import { AiFillFolder, AiFillFile } from "react-icons/ai";
+import { BsMusicNoteBeamed } from "react-icons/bs";
+import { MdMovie } from "react-icons/md";
 
 export default function FileList({ files }: StorageProps) {
   const router = useRouter();
@@ -39,13 +42,22 @@ export default function FileList({ files }: StorageProps) {
             />
           );
         } else {
+          var Icon: IconType;
+          if (f.MimeType.includes("audio")) {
+            Icon = BsMusicNoteBeamed;
+          } else if (f.MimeType.includes("video")) {
+            Icon = MdMovie;
+          } else {
+            Icon = AiFillFile;
+          }
+
           return (
             <FileCard
               href={`${process.env.NEXT_PUBLIC_STORAGE}/${
                 router.query.path ?? ""
               }${f.Name}`}
               fileName={f.Name}
-              Icon={AiFillFile}
+              Icon={Icon}
               key={i}
             />
           );
