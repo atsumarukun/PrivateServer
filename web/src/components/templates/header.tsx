@@ -1,25 +1,12 @@
-import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogCloseButton,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
-  Button,
-  HStack,
-  Text,
-  useDisclosure,
-  useToast,
-} from "@chakra-ui/react";
+import { HStack, Text, useToast } from "@chakra-ui/react";
 import Link from "next/link";
-import { useRef } from "react";
+import Alert from "./alert";
+import { messages } from "@/constants/message";
 import { CiPower } from "react-icons/ci";
 
-function PowerButton() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = useRef(null);
+export default function Header() {
   const toast = useToast();
+  const alertMessage = messages.alert.shutdown;
 
   const onClick = async () => {
     const res = await fetch("/api/power/shutdown");
@@ -38,46 +25,8 @@ function PowerButton() {
         isClosable: true,
       });
     }
-    onClose();
   };
 
-  return (
-    <>
-      <button onClick={onOpen}>
-        <CiPower size="30" />
-      </button>
-      <AlertDialog
-        motionPreset="slideInBottom"
-        leastDestructiveRef={cancelRef}
-        onClose={onClose}
-        isOpen={isOpen}
-        isCentered
-      >
-        <AlertDialogOverlay />
-
-        <AlertDialogContent>
-          <AlertDialogHeader>シャットダウン</AlertDialogHeader>
-          <AlertDialogCloseButton />
-          <AlertDialogBody>
-            シャットダウンしますか?
-            <br />
-            実行中のプロセスが中断され、データが保存されない恐れがあります.
-          </AlertDialogBody>
-          <AlertDialogFooter>
-            <Button ref={cancelRef} onClick={onClose}>
-              いいえ
-            </Button>
-            <Button colorScheme="red" ml={3} onClick={onClick}>
-              はい
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
-  );
-}
-
-export default function Header() {
   return (
     <header>
       <HStack
@@ -92,7 +41,12 @@ export default function Header() {
             PrivateServer
           </Text>
         </Link>
-        <PowerButton />
+        <Alert
+          onClick={onClick}
+          Icon={CiPower}
+          message={alertMessage}
+          size="30"
+        />
       </HStack>
     </header>
   );
