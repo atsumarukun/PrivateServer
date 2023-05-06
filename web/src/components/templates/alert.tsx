@@ -54,10 +54,10 @@ export default function Alert({ onClick, Icon, message, size }: Props) {
           </AlertDialogBody>
           <AlertDialogFooter>
             <Button variant="ghost" ref={cancelRef} onClick={onClose}>
-              <Text fontWeight="400">いいえ</Text>
+              <Text fontWeight="400">キャンセル</Text>
             </Button>
             <Button variant="ghost" ml={3} onClick={handleClick}>
-              <Text fontWeight="400">はい</Text>
+              <Text fontWeight="400">実行</Text>
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
