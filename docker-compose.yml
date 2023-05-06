@@ -13,7 +13,7 @@ services:
     command: npm run dev
 
   api:
-    image: golang
+    image: golang:1.20.4
     volumes:
       - ./api:/go/src/api
     working_dir: /go/src/api
