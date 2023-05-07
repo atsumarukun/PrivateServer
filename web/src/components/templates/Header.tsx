@@ -1,6 +1,6 @@
 import { HStack, Text, useToast } from "@chakra-ui/react";
 import Link from "next/link";
-import Alert from "./Alert";
+import Alert from "../parts/Alert";
 import { messages } from "@/constants/message";
 import { CiPower } from "react-icons/ci";
 
