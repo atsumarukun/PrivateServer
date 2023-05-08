@@ -24,6 +24,7 @@ func Router() *gin.Engine {
 		{
 			ctrl := controllers.StorageController{}
 			s.GET("/", ctrl.Get)
+			s.DELETE("/", ctrl.Delete)
 		}
 	}
 

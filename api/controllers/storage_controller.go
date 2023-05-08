@@ -40,3 +40,14 @@ func (_ StorageController) Get(c *gin.Context) {
 		"files": fs,
 	})
 }
+
+func (_ StorageController) Delete(c *gin.Context) {
+	if err := os.RemoveAll(fmt.Sprintf("/go/src/api/storage/%s", c.Query("key"))); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err,
+		})
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "ok",
+	})
+}

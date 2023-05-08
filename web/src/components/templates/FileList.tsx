@@ -53,9 +53,9 @@ export default function FileList({ files }: StorageProps) {
 
           return (
             <FileCard
-              href={`${process.env.NEXT_PUBLIC_STORAGE}/${
+              href={`${process.env.NEXT_PUBLIC_STORAGE}${
                 router.query.path ?? ""
-              }${f.Name}`}
+              }/${f.Name}`}
               fileName={f.Name}
               Icon={Icon}
               key={i}
