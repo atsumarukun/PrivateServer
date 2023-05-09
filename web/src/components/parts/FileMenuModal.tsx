@@ -92,6 +92,44 @@ export default function FileMenuModal({ fileName }: Props) {
     router.reload();
   };
 
+  const download = async () => {
+    const res = await fetch(
+      `/api/storage/download?key=${router.query.path ?? ""}/${fileName}`
+    );
+    if (res.status === 200) {
+      try {
+        const blob = new Blob([await res.arrayBuffer()]);
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName;
+        link.click();
+        link.remove();
+        toast({
+          title: "削除しました.",
+          status: "success",
+          duration: 200,
+          isClosable: true,
+        });
+      } catch {
+        toast({
+          title: "エラーが発生しました.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    } else {
+      toast({
+        title: "エラーが発生しました.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+    handleClose();
+    router.reload();
+  };
+
   const handleRemove = async () => {
     const res = await fetch(
       `/api/storage/remove?key=${router.query.path ?? ""}/${fileName}`,
@@ -155,7 +193,7 @@ export default function FileMenuModal({ fileName }: Props) {
                     名前変更
                   </Text>
                 </Button>
-                <Button variant="ghost">
+                <Button variant="ghost" onClick={download}>
                   <AiOutlineDownload size="25" />
                   <Text fontWeight="400" ml="2">
                     ダウンロード
