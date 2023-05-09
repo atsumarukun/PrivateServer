@@ -1,6 +1,5 @@
 import { AspectRatio, Box, GridItem, Text } from "@chakra-ui/react";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { IconType } from "react-icons";
 import FileMenuModal from "./FileMenuModal";
 
@@ -11,8 +10,6 @@ interface Props {
 }
 
 export default function FileCard({ Icon, fileName, href }: Props) {
-  const router = useRouter();
-
   return (
     <Box>
       <FileMenuModal fileName={fileName} />
