@@ -1,7 +1,7 @@
 import { AspectRatio, Box, GridItem, Image, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import FileMenuModal from "./FileMenuModal";
+import FileMenuModal from "../templates/FileMenuModal";
 
 interface Props {
   fileName: string;

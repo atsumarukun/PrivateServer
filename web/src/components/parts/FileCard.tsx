@@ -1,7 +1,7 @@
 import { AspectRatio, Box, GridItem, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import { IconType } from "react-icons";
-import FileMenuModal from "./FileMenuModal";
+import FileMenuModal from "../templates/FileMenuModal";
 
 interface Props {
   Icon: IconType;
