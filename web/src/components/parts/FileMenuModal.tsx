@@ -105,7 +105,7 @@ export default function FileMenuModal({ fileName }: Props) {
         link.click();
         link.remove();
         toast({
-          title: "削除しました.",
+          title: "保存しました.",
           status: "success",
           duration: 200,
           isClosable: true,
