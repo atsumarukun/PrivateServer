@@ -39,12 +39,9 @@ export default function FileList({ files }: StorageProps) {
         if (mimeType === "dir") {
           router.push({ query: `path=${router.query.path ?? ""}/${fileName}` });
         } else {
-          const link = document.createElement("a");
-          link.href = `${process.env.NEXT_PUBLIC_STORAGE}${
+          document.location.href = `${process.env.NEXT_PUBLIC_STORAGE}${
             router.query.path ?? ""
           }/${fileName}`;
-          link.click();
-          link.remove();
         }
         setSelectedFiles([]);
       } else {
