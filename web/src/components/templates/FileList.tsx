@@ -1,7 +1,7 @@
 import FileCard from "@/components/parts/FileCard";
 import ImageCard from "@/components/parts/ImageCard";
 import { StorageProps } from "@/constants/props";
-import { Grid } from "@chakra-ui/react";
+import { Box, Grid } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { IconType } from "react-icons";
 import { AiFillFolder, AiFillFile } from "react-icons/ai";
@@ -19,6 +19,7 @@ export default function FileList({ files }: StorageProps) {
     mimeType: string,
     e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
   ) => {
+    e.stopPropagation();
     if (e.ctrlKey) {
       // ファイル選択(ctrlを押しながらクリック)
       if (selectedFiles.includes(fileName)) {
@@ -52,72 +53,82 @@ export default function FileList({ files }: StorageProps) {
   };
 
   return (
-    <Grid
-      gap="8"
-      py="10"
-      templateColumns={{
-        base: "repeat(2, 1fr)",
-        md: "repeat(4, 1fr)",
-        lg: "repeat(5, 1fr)",
-      }}
-    >
-      {files?.map((f, i) => {
-        if (f.MimeType.includes("image")) {
-          return (
-            <StorageCardWrapper
-              onClick={(e) => onClick(f.Name, f.MimeType, e)}
-              border={selectedFiles.includes(f.Name) ? "solid 2px gray" : ""}
-              key={i}
-            >
-              <ImageCard
-                href={`${process.env.NEXT_PUBLIC_STORAGE}${
-                  router.query.path ?? ""
-                }/${f.Name}`}
-                fileName={f.Name}
-              />
-            </StorageCardWrapper>
-          );
-        } else if (f.MimeType === "dir") {
-          return (
-            <StorageCardWrapper
-              onClick={(e) => onClick(f.Name, f.MimeType, e)}
-              border={selectedFiles.includes(f.Name) ? "solid 2px gray" : ""}
-              key={i}
-            >
-              <FileCard
-                href={`?path=${router.query.path ?? ""}/${f.Name}`}
-                fileName={f.Name}
-                Icon={AiFillFolder}
-              />
-            </StorageCardWrapper>
-          );
-        } else {
-          var Icon: IconType;
-          if (f.MimeType.includes("audio")) {
-            Icon = BsMusicNoteBeamed;
-          } else if (f.MimeType.includes("video")) {
-            Icon = MdMovie;
+    <>
+      <Box
+        position="absolute"
+        h="100vh"
+        w="100vw"
+        top="0"
+        left="0"
+        onClick={() => setSelectedFiles([])}
+      ></Box>
+      <Grid
+        gap="8"
+        py="10"
+        templateColumns={{
+          base: "repeat(2, 1fr)",
+          md: "repeat(4, 1fr)",
+          lg: "repeat(5, 1fr)",
+        }}
+      >
+        {files?.map((f, i) => {
+          if (f.MimeType.includes("image")) {
+            return (
+              <StorageCardWrapper
+                onClick={(e) => onClick(f.Name, f.MimeType, e)}
+                border={selectedFiles.includes(f.Name) ? "solid 2px gray" : ""}
+                key={i}
+              >
+                <ImageCard
+                  href={`${process.env.NEXT_PUBLIC_STORAGE}${
+                    router.query.path ?? ""
+                  }/${f.Name}`}
+                  fileName={f.Name}
+                />
+              </StorageCardWrapper>
+            );
+          } else if (f.MimeType === "dir") {
+            return (
+              <StorageCardWrapper
+                onClick={(e) => onClick(f.Name, f.MimeType, e)}
+                border={selectedFiles.includes(f.Name) ? "solid 2px gray" : ""}
+                key={i}
+              >
+                <FileCard
+                  href={`?path=${router.query.path ?? ""}/${f.Name}`}
+                  fileName={f.Name}
+                  Icon={AiFillFolder}
+                />
+              </StorageCardWrapper>
+            );
           } else {
-            Icon = AiFillFile;
-          }
+            var Icon: IconType;
+            if (f.MimeType.includes("audio")) {
+              Icon = BsMusicNoteBeamed;
+            } else if (f.MimeType.includes("video")) {
+              Icon = MdMovie;
+            } else {
+              Icon = AiFillFile;
+            }
 
-          return (
-            <StorageCardWrapper
-              onClick={(e) => onClick(f.Name, f.MimeType, e)}
-              border={selectedFiles.includes(f.Name) ? "solid 2px gray" : ""}
-              key={i}
-            >
-              <FileCard
-                href={`${process.env.NEXT_PUBLIC_STORAGE}${
-                  router.query.path ?? ""
-                }/${f.Name}`}
-                fileName={f.Name}
-                Icon={Icon}
-              />
-            </StorageCardWrapper>
-          );
-        }
-      })}
-    </Grid>
+            return (
+              <StorageCardWrapper
+                onClick={(e) => onClick(f.Name, f.MimeType, e)}
+                border={selectedFiles.includes(f.Name) ? "solid 2px gray" : ""}
+                key={i}
+              >
+                <FileCard
+                  href={`${process.env.NEXT_PUBLIC_STORAGE}${
+                    router.query.path ?? ""
+                  }/${f.Name}`}
+                  fileName={f.Name}
+                  Icon={Icon}
+                />
+              </StorageCardWrapper>
+            );
+          }
+        })}
+      </Grid>
+    </>
   );
 }
