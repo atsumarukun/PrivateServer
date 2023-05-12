@@ -1,4 +1,4 @@
-import FileCard from "@/components/parts/FileCard";
+import IconCard from "@/components/parts/IconCard";
 import ImageCard from "@/components/parts/ImageCard";
 import { StorageProps } from "@/constants/props";
 import { Box, Grid, useToast } from "@chakra-ui/react";
@@ -111,10 +111,11 @@ export default function FileList({ files }: StorageProps) {
                 key={i}
               >
                 <ImageCard
-                  href={`${process.env.NEXT_PUBLIC_STORAGE}${
+                  src={`${process.env.NEXT_PUBLIC_STORAGE}${
                     router.query.path ?? ""
                   }/${f.Name}`}
-                  fileName={f.Name}
+                  alt={f.Name}
+                  text={f.Name}
                 />
               </StorageCardWrapper>
             );
@@ -128,7 +129,7 @@ export default function FileList({ files }: StorageProps) {
                 border={selectedFiles.includes(f.Name) ? "solid 2px gray" : ""}
                 key={i}
               >
-                <FileCard fileName={f.Name} Icon={AiFillFolder} />
+                <IconCard text={f.Name} Icon={AiFillFolder} />
               </StorageCardWrapper>
             );
           } else {
@@ -150,7 +151,7 @@ export default function FileList({ files }: StorageProps) {
                 border={selectedFiles.includes(f.Name) ? "solid 2px gray" : ""}
                 key={i}
               >
-                <FileCard fileName={f.Name} Icon={Icon} />
+                <IconCard text={f.Name} Icon={Icon} />
               </StorageCardWrapper>
             );
           }
