@@ -1,23 +1,24 @@
 import FileCard from "@/components/parts/FileCard";
 import ImageCard from "@/components/parts/ImageCard";
 import { StorageProps } from "@/constants/props";
-import { Box, Grid } from "@chakra-ui/react";
+import { Box, Grid, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { IconType } from "react-icons";
 import { AiFillFolder, AiFillFile } from "react-icons/ai";
 import { BsMusicNoteBeamed } from "react-icons/bs";
 import { MdMovie } from "react-icons/md";
 import StorageCardWrapper from "../parts/StorageCardWrapper";
-import { MouseEvent, useState } from "react";
+import { KeyboardEvent, MouseEvent, useState } from "react";
 
 export default function FileList({ files }: StorageProps) {
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const router = useRouter();
+  const toast = useToast();
 
   const onClick = (
     fileName: string,
     mimeType: string,
-    e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+    e: MouseEvent<HTMLDivElement>
   ) => {
     e.stopPropagation();
     if (e.ctrlKey) {
@@ -52,6 +53,33 @@ export default function FileList({ files }: StorageProps) {
     }
   };
 
+  const onKeyDown = async (e: KeyboardEvent<HTMLDivElement>) => {
+    const query = `keys[]=${router.query.path ?? ""}/${selectedFiles.join(
+      `&keys[]=${router.query.path ?? ""}/`
+    )}`;
+    if (e.key === "Delete") {
+      const res = await fetch(`/api/storage/remove?${query}`, {
+        method: "DELETE",
+      });
+      if (res.status === 200) {
+        toast({
+          title: "削除しました.",
+          status: "success",
+          duration: 200,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: "エラーが発生しました.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    }
+    router.reload();
+  };
+
   return (
     <>
       <Box
@@ -75,6 +103,9 @@ export default function FileList({ files }: StorageProps) {
           if (f.MimeType.includes("image")) {
             return (
               <StorageCardWrapper
+                tabIndex={0}
+                fileName={f.Name}
+                onKeyDown={(e) => onKeyDown(e)}
                 onClick={(e) => onClick(f.Name, f.MimeType, e)}
                 border={selectedFiles.includes(f.Name) ? "solid 2px gray" : ""}
                 key={i}
@@ -90,15 +121,14 @@ export default function FileList({ files }: StorageProps) {
           } else if (f.MimeType === "dir") {
             return (
               <StorageCardWrapper
+                tabIndex={0}
+                fileName={f.Name}
+                onKeyDown={(e) => onKeyDown(e)}
                 onClick={(e) => onClick(f.Name, f.MimeType, e)}
                 border={selectedFiles.includes(f.Name) ? "solid 2px gray" : ""}
                 key={i}
               >
-                <FileCard
-                  href={`?path=${router.query.path ?? ""}/${f.Name}`}
-                  fileName={f.Name}
-                  Icon={AiFillFolder}
-                />
+                <FileCard fileName={f.Name} Icon={AiFillFolder} />
               </StorageCardWrapper>
             );
           } else {
@@ -113,17 +143,14 @@ export default function FileList({ files }: StorageProps) {
 
             return (
               <StorageCardWrapper
+                tabIndex={0}
+                fileName={f.Name}
+                onKeyDown={(e) => onKeyDown(e)}
                 onClick={(e) => onClick(f.Name, f.MimeType, e)}
                 border={selectedFiles.includes(f.Name) ? "solid 2px gray" : ""}
                 key={i}
               >
-                <FileCard
-                  href={`${process.env.NEXT_PUBLIC_STORAGE}${
-                    router.query.path ?? ""
-                  }/${f.Name}`}
-                  fileName={f.Name}
-                  Icon={Icon}
-                />
+                <FileCard fileName={f.Name} Icon={Icon} />
               </StorageCardWrapper>
             );
           }

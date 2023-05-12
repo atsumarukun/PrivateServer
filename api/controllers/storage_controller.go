@@ -63,11 +63,24 @@ func (_ StorageController) Rename(c *gin.Context) {
 }
 
 func (_ StorageController) Remove(c *gin.Context) {
-	if err := os.RemoveAll(fmt.Sprintf("/go/src/api/storage/%s", c.Query("key"))); err != nil {
+	type RemoveRequest struct {
+		Keys []string `form:"keys[]"`
+	}
+	var req RemoveRequest
+	if err := c.ShouldBindQuery(&req); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err,
 		})
 	}
+
+	for _, key := range req.Keys {
+		if err := os.RemoveAll(fmt.Sprintf("/go/src/api/storage/%s", key)); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err,
+			})
+		}
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": "ok",
 	})

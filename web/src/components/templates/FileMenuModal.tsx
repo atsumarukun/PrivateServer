@@ -132,7 +132,7 @@ export default function FileMenuModal({ fileName }: Props) {
 
   const handleRemove = async () => {
     const res = await fetch(
-      `/api/storage/remove?key=${router.query.path ?? ""}/${fileName}`,
+      `/api/storage/remove?keys[]=${router.query.path ?? ""}/${fileName}`,
       {
         method: "DELETE",
       }
