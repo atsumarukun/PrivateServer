@@ -87,40 +87,51 @@ func (_ StorageController) Remove(c *gin.Context) {
 }
 
 func (_ StorageController) Copy(c *gin.Context) {
-	type CopyRequest struct {
-		Key string `json:"key"`
+	type CopyRequestQuery struct {
+		Keys []string `form:"keys[]"`
 	}
-	var req CopyRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
+	var query CopyRequestQuery
+	if err := c.ShouldBindQuery(&query); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err,
+		})
+	}
+	type CopyRequestBody struct {
+		Path string `json:"path"`
+	}
+	var body CopyRequestBody
+	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err,
 		})
 	}
 	var newFile io.Writer
 	var err error
-	if c.Query("key") == req.Key {
-		newFile, err = os.Create(fmt.Sprintf("/go/src/api/storage/%s", strings.Replace(req.Key, ".", " copy.", 1)))
+	for _, key := range query.Keys {
+		fileName := key[strings.LastIndex(key, "/"):]
+		if key == body.Path {
+			newFile, err = os.Create(fmt.Sprintf("/go/src/api/storage/%s/%s", body.Path, strings.Replace(fileName, ".", " copy.", 1)))
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"error": err,
+				})			
+			}
+		} else {
+			newFile, err = os.Create(fmt.Sprintf("/go/src/api/storage/%s/%s", body.Path, fileName))
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"error": err,
+				})			
+			}
+		}
+		oldFile, err := os.Open(fmt.Sprintf("/go/src/api/storage/%s", key))
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": err,
-			})			
+			})		
 		}
-	} else {
-		newFile, err = os.Create(fmt.Sprintf("/go/src/api/storage/%s", req.Key))
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": err,
-			})			
-		}
+		io.Copy(newFile, oldFile)
 	}
-	oldFile, err := os.Open(fmt.Sprintf("/go/src/api/storage/%s", c.Query("key")))
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err,
-		})		
-	}
-
-	io.Copy(newFile, oldFile)
 	c.JSON(http.StatusOK, gin.H{
 		"message": "ok",
 	})

@@ -8,10 +8,13 @@ import { AiFillFolder, AiFillFile } from "react-icons/ai";
 import { BsMusicNoteBeamed } from "react-icons/bs";
 import { MdMovie } from "react-icons/md";
 import StorageCardWrapper from "../parts/StorageCardWrapper";
-import { KeyboardEvent, MouseEvent, useState } from "react";
+import { KeyboardEvent, MouseEvent, useContext, useState } from "react";
+import { FileSelectStatus } from "@/constants/status";
+import { StorageContext } from "@/providers/storageProvider";
 
 export default function FileList({ files }: StorageProps) {
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
+  const context = useContext(StorageContext);
   const router = useRouter();
   const toast = useToast();
 
@@ -34,9 +37,12 @@ export default function FileList({ files }: StorageProps) {
       }
     } else {
       if (
-        !selectedFiles.length ||
-        JSON.stringify(selectedFiles) === JSON.stringify([fileName])
+        context.globalFiles.length &&
+        context.status === FileSelectStatus.default
       ) {
+        // 選択ファイル変更(通常クリック)
+        setSelectedFiles([fileName]);
+      } else {
         // ファイル表示(通常クリック)
         if (mimeType === "dir") {
           router.push({ query: `path=${router.query.path ?? ""}/${fileName}` });
@@ -46,9 +52,6 @@ export default function FileList({ files }: StorageProps) {
           }/${fileName}`;
         }
         setSelectedFiles([]);
-      } else {
-        // 選択ファイル変更(通常クリック)
-        setSelectedFiles([fileName]);
       }
     }
   };
@@ -76,8 +79,51 @@ export default function FileList({ files }: StorageProps) {
           isClosable: true,
         });
       }
+      router.reload();
+    } else if (e.ctrlKey) {
+      if (e.key === "c") {
+        context.setStatus(FileSelectStatus.copy);
+        context.setGlobalFiles(selectedFiles);
+        context.setFilePath(
+          typeof router.query.path === "string" ? router.query.path : "/"
+        );
+      }
     }
-    router.reload();
+  };
+
+  const handlePaste = async (e: KeyboardEvent<HTMLDivElement>) => {
+    if (context.globalFiles.length && e.ctrlKey && e.key === "v") {
+      if (context.status === FileSelectStatus.copy) {
+        const query = `keys[]=${context.filePath}/${context.globalFiles.join(
+          `&keys[]=${context.filePath}/`
+        )}`;
+        const res = await fetch(`/api/storage/copy?${query}`, {
+          method: "PUT",
+          body: JSON.stringify({ path: router.query.path ?? "/" }),
+        });
+        if (res.status === 200) {
+          toast({
+            title: "コピーしました.",
+            status: "success",
+            duration: 200,
+            isClosable: true,
+          });
+        } else {
+          toast({
+            title: "エラーが発生しました.",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          });
+        }
+      }
+      router.reload();
+      context.setGlobalFiles([]);
+      context.setFilePath(
+        typeof router.query.path === "string" ? router.query.path : ""
+      );
+      context.setStatus(FileSelectStatus.default);
+    }
   };
 
   return (
@@ -88,8 +134,10 @@ export default function FileList({ files }: StorageProps) {
         w="100vw"
         top="0"
         left="0"
+        tabIndex={0}
         onClick={() => setSelectedFiles([])}
-      ></Box>
+        onKeyDown={(e) => handlePaste(e)}
+      />
       <Grid
         gap="8"
         py="10"
