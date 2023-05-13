@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { Dispatch, SetStateAction } from "react";
-import { AiOutlineDownload } from "react-icons/ai";
+import { AiOutlineCopy, AiOutlineDownload } from "react-icons/ai";
 import { CgTrashEmpty } from "react-icons/cg";
 import {
   MdDriveFileRenameOutline,
@@ -92,6 +92,15 @@ export default function FileMenuModalContent({
             <MdOutlineDriveFileMove size="25" />
             <Text fontWeight="400" ml="2">
               移動
+            </Text>
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => setStatus(FileMenuStatus.copy)}
+          >
+            <AiOutlineCopy size="25" />
+            <Text fontWeight="400" ml="2">
+              コピ−
             </Text>
           </Button>
           <Button variant="ghost" onClick={download}>

@@ -11,6 +11,7 @@ import RenameFileModalContent from "./ModalContents/RenameFileModalContent";
 import FileMenuModalContent from "./ModalContents/FileMenuModalContent";
 import RemoveFileModalContent from "./ModalContents/RemoveFileModalContent";
 import MoveFileModalContent from "./ModalContents/MoveFileModalContent";
+import CopyFileModalContent from "./ModalContents/CopyFileModalContent";
 import { FileMenuStatus } from "@/constants/status";
 
 interface Props {
@@ -58,11 +59,14 @@ export default function FileMenuModal({ fileName }: Props) {
             setStatus={setStatus}
           />
         )}
+        {status === FileMenuStatus.rename && (
+          <RenameFileModalContent fileName={fileName} onClose={handleClose} />
+        )}
         {status === FileMenuStatus.move && (
           <MoveFileModalContent fileName={fileName} onClose={handleClose} />
         )}
-        {status === FileMenuStatus.rename && (
-          <RenameFileModalContent fileName={fileName} onClose={handleClose} />
+        {status === FileMenuStatus.copy && (
+          <CopyFileModalContent fileName={fileName} onClose={handleClose} />
         )}
         {status === FileMenuStatus.remove && (
           <RemoveFileModalContent fileName={fileName} onClose={handleClose} />

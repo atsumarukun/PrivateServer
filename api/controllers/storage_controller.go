@@ -2,7 +2,9 @@ package controllers
 
 import (
 	"os"
+	"io"
 	"fmt"
+	"strings"
 	"net/http"
 	"io/ioutil"
 	"github.com/gin-gonic/gin"
@@ -79,6 +81,46 @@ func (_ StorageController) Remove(c *gin.Context) {
 		}
 	}
 
+	c.JSON(http.StatusOK, gin.H{
+		"message": "ok",
+	})
+}
+
+func (_ StorageController) Copy(c *gin.Context) {
+	type CopyRequest struct {
+		Key string `json:"key"`
+	}
+	var req CopyRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err,
+		})
+	}
+	var newFile io.Writer
+	var err error
+	if c.Query("key") == req.Key {
+		newFile, err = os.Create(fmt.Sprintf("/go/src/api/storage/%s", strings.Replace(req.Key, ".", " copy.", 1)))
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err,
+			})			
+		}
+	} else {
+		newFile, err = os.Create(fmt.Sprintf("/go/src/api/storage/%s", req.Key))
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err,
+			})			
+		}
+	}
+	oldFile, err := os.Open(fmt.Sprintf("/go/src/api/storage/%s", c.Query("key")))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err,
+		})		
+	}
+
+	io.Copy(newFile, oldFile)
 	c.JSON(http.StatusOK, gin.H{
 		"message": "ok",
 	})
