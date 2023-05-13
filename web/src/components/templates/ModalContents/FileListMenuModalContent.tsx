@@ -13,6 +13,7 @@ import {
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import { AiOutlineCopy, AiOutlineDownload } from "react-icons/ai";
+import { CgTrashEmpty } from "react-icons/cg";
 import { MdOutlineDriveFileMove } from "react-icons/md";
 
 interface Props {
@@ -69,6 +70,31 @@ export default function FileListMenuModalContent({
     onClose();
   };
 
+  const remove = async () => {
+    const query = `keys[]=${router.query.path ?? ""}/${selectedFiles.join(
+      `&keys[]=${router.query.path ?? ""}/`
+    )}`;
+    const res = await fetch(`/api/storage/remove?${query}`, {
+      method: "DELETE",
+    });
+    if (res.status === 200) {
+      toast({
+        title: "削除しました.",
+        status: "success",
+        duration: 200,
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: "エラーが発生しました.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+    router.reload();
+  };
+
   return (
     <ModalContent>
       <ModalHeader>FileMenu</ModalHeader>
@@ -98,6 +124,12 @@ export default function FileListMenuModalContent({
               <AiOutlineDownload size="25" />
               <Text fontWeight="400" ml="2">
                 ダウンロード
+              </Text>
+            </Button>
+            <Button variant="ghost" onClick={remove}>
+              <CgTrashEmpty size="25" />
+              <Text fontWeight="400" ml="2">
+                削除
               </Text>
             </Button>
           </VStack>
