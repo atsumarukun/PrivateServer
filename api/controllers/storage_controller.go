@@ -10,16 +10,11 @@ import (
 
 type StorageController struct{}
 
-type File struct {
-	Name string
-	MimeType string
-}
-
-type RenameRequest struct {
-	Key string `json:"key"`
-}
-
 func (_ StorageController) Get(c *gin.Context) {
+	type File struct {
+		Name string
+		MimeType string
+	}
     files, err := ioutil.ReadDir(fmt.Sprintf("/go/src/api/storage/%s", c.Query("path")))
     if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -46,6 +41,9 @@ func (_ StorageController) Get(c *gin.Context) {
 }
 
 func (_ StorageController) Rename(c *gin.Context) {
+	type RenameRequest struct {
+		Key string `json:"key"`
+	}
 	var req RenameRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

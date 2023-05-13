@@ -1,5 +1,6 @@
 export const FileMenuStatus = {
   default: 0,
-  rename: 1,
-  remove: 2,
+  move: 1,
+  rename: 2,
+  remove: 3,
 };

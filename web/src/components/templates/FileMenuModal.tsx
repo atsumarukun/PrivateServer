@@ -10,6 +10,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import RenameFileModalContent from "./ModalContents/RenameFileModalContent";
 import FileMenuModalContent from "./ModalContents/FileMenuModalContent";
 import RemoveFileModalContent from "./ModalContents/RemoveFileModalContent";
+import MoveFileModalContent from "./ModalContents/MoveFileModalContent";
 import { FileMenuStatus } from "@/constants/status";
 
 interface Props {
@@ -56,6 +57,9 @@ export default function FileMenuModal({ fileName }: Props) {
             onClose={handleClose}
             setStatus={setStatus}
           />
+        )}
+        {status === FileMenuStatus.move && (
+          <MoveFileModalContent fileName={fileName} onClose={handleClose} />
         )}
         {status === FileMenuStatus.rename && (
           <RenameFileModalContent fileName={fileName} onClose={handleClose} />

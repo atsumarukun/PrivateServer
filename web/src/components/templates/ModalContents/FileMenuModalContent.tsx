@@ -13,7 +13,10 @@ import { useRouter } from "next/router";
 import { Dispatch, SetStateAction } from "react";
 import { AiOutlineDownload } from "react-icons/ai";
 import { FaRegTrashAlt } from "react-icons/fa";
-import { MdDriveFileRenameOutline } from "react-icons/md";
+import {
+  MdDriveFileRenameOutline,
+  MdOutlineDriveFileMove,
+} from "react-icons/md";
 
 interface Props {
   fileName: string;
@@ -80,6 +83,15 @@ export default function FileMenuModalContent({
             <MdDriveFileRenameOutline size="25" />
             <Text fontWeight="400" ml="2">
               名前変更
+            </Text>
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => setStatus(FileMenuStatus.move)}
+          >
+            <MdOutlineDriveFileMove size="25" />
+            <Text fontWeight="400" ml="2">
+              移動
             </Text>
           </Button>
           <Button variant="ghost" onClick={download}>
