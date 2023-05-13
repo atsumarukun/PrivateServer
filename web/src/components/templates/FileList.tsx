@@ -1,20 +1,31 @@
 import IconCard from "@/components/parts/IconCard";
 import ImageCard from "@/components/parts/ImageCard";
 import { StorageProps } from "@/constants/props";
-import { Box, Grid, useToast } from "@chakra-ui/react";
+import {
+  Box,
+  Grid,
+  Modal,
+  ModalOverlay,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { IconType } from "react-icons";
 import { AiFillFolder, AiFillFile } from "react-icons/ai";
 import { BsMusicNoteBeamed } from "react-icons/bs";
 import { MdMovie } from "react-icons/md";
 import StorageCardWrapper from "../parts/StorageCardWrapper";
-import { KeyboardEvent, MouseEvent, useContext, useState } from "react";
+import { KeyboardEvent, MouseEvent, useContext, useRef, useState } from "react";
 import { FileSelectStatus } from "@/constants/status";
 import { StorageContext } from "@/providers/storageProvider";
+import FileListMenuModalContent from "./ModalContents/FileListMenuModalContent";
+import PasteFileMenuModalContent from "./ModalContents/PasteFileModalContent";
 
 export default function FileList({ files }: StorageProps) {
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const context = useContext(StorageContext);
+  const finalRef = useRef(null);
   const router = useRouter();
   const toast = useToast();
 
@@ -56,6 +67,11 @@ export default function FileList({ files }: StorageProps) {
     }
   };
 
+  const onContextMenu = (e: MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    onOpen();
+  };
+
   const onKeyDown = async (e: KeyboardEvent<HTMLDivElement>) => {
     const query = `keys[]=${router.query.path ?? ""}/${selectedFiles.join(
       `&keys[]=${router.query.path ?? ""}/`
@@ -95,61 +111,65 @@ export default function FileList({ files }: StorageProps) {
     }
   };
 
-  const handlePaste = async (e: KeyboardEvent<HTMLDivElement>) => {
-    if (context.globalFiles.length && e.ctrlKey && e.key === "v") {
-      if (context.status === FileSelectStatus.copy) {
-        const query = `keys[]=${context.filePath}/${context.globalFiles.join(
-          `&keys[]=${context.filePath}/`
-        )}`;
-        const res = await fetch(`/api/storage/copy?${query}`, {
-          method: "PUT",
-          body: JSON.stringify({ path: router.query.path ?? "/" }),
+  const paste = async () => {
+    if (context.status === FileSelectStatus.copy) {
+      const query = `keys[]=${context.filePath}/${context.globalFiles.join(
+        `&keys[]=${context.filePath}/`
+      )}`;
+      const res = await fetch(`/api/storage/copy?${query}`, {
+        method: "PUT",
+        body: JSON.stringify({ path: router.query.path ?? "/" }),
+      });
+      if (res.status === 200) {
+        toast({
+          title: "コピーしました.",
+          status: "success",
+          duration: 200,
+          isClosable: true,
         });
-        if (res.status === 200) {
-          toast({
-            title: "コピーしました.",
-            status: "success",
-            duration: 200,
-            isClosable: true,
-          });
-        } else {
-          toast({
-            title: "エラーが発生しました.",
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-          });
-        }
-      } else if (context.status === FileSelectStatus.move) {
-        const query = `keys[]=${context.filePath}/${context.globalFiles.join(
-          `&keys[]=${context.filePath}/`
-        )}`;
-        const res = await fetch(`/api/storage/move?${query}`, {
-          method: "PUT",
-          body: JSON.stringify({ path: router.query.path ?? "/" }),
+      } else {
+        toast({
+          title: "エラーが発生しました.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
         });
-        if (res.status === 200) {
-          toast({
-            title: "移動しました.",
-            status: "success",
-            duration: 200,
-            isClosable: true,
-          });
-        } else {
-          toast({
-            title: "エラーが発生しました.",
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-          });
-        }
       }
-      router.reload();
-      context.setGlobalFiles([]);
-      context.setFilePath(
-        typeof router.query.path === "string" ? router.query.path : ""
-      );
-      context.setStatus(FileSelectStatus.default);
+    } else if (context.status === FileSelectStatus.move) {
+      const query = `keys[]=${context.filePath}/${context.globalFiles.join(
+        `&keys[]=${context.filePath}/`
+      )}`;
+      const res = await fetch(`/api/storage/move?${query}`, {
+        method: "PUT",
+        body: JSON.stringify({ path: router.query.path ?? "/" }),
+      });
+      if (res.status === 200) {
+        toast({
+          title: "移動しました.",
+          status: "success",
+          duration: 200,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: "エラーが発生しました.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    }
+    router.reload();
+    context.setGlobalFiles([]);
+    context.setFilePath(
+      typeof router.query.path === "string" ? router.query.path : ""
+    );
+    context.setStatus(FileSelectStatus.default);
+  };
+
+  const keyboardPaste = async (e: KeyboardEvent<HTMLDivElement>) => {
+    if (context.globalFiles.length && e.ctrlKey && e.key === "v") {
+      await paste();
     }
   };
 
@@ -163,7 +183,8 @@ export default function FileList({ files }: StorageProps) {
         left="0"
         tabIndex={0}
         onClick={() => setSelectedFiles([])}
-        onKeyDown={(e) => handlePaste(e)}
+        onContextMenu={(e) => onContextMenu(e)}
+        onKeyDown={(e) => keyboardPaste(e)}
       />
       <Grid
         gap="8"
@@ -232,6 +253,22 @@ export default function FileList({ files }: StorageProps) {
           }
         })}
       </Grid>
+      <Modal
+        finalFocusRef={finalRef}
+        isOpen={isOpen}
+        onClose={onClose}
+        isCentered
+      >
+        <ModalOverlay />
+        {context.status === FileSelectStatus.default ? (
+          <FileListMenuModalContent
+            selectedFiles={selectedFiles}
+            onClose={onClose}
+          />
+        ) : (
+          <PasteFileMenuModalContent onClick={paste} onClose={onClose} />
+        )}
+      </Modal>
     </>
   );
 }
