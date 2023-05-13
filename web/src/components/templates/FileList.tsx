@@ -260,14 +260,11 @@ export default function FileList({ files }: StorageProps) {
         isCentered
       >
         <ModalOverlay />
-        {context.status === FileSelectStatus.default ? (
-          <FileListMenuModalContent
-            selectedFiles={selectedFiles}
-            onClose={onClose}
-          />
-        ) : (
-          <PasteFileMenuModalContent onClick={paste} onClose={onClose} />
-        )}
+        <FileListMenuModalContent
+          selectedFiles={selectedFiles}
+          onClose={onClose}
+          paste={paste}
+        />
       </Modal>
     </>
   );

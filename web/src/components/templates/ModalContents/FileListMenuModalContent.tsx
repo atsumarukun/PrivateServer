@@ -19,11 +19,13 @@ import { MdOutlineDriveFileMove } from "react-icons/md";
 interface Props {
   selectedFiles: string[];
   onClose: () => void;
+  paste: () => void;
 }
 
 export default function FileListMenuModalContent({
   selectedFiles,
   onClose,
+  paste,
 }: Props) {
   const context = useContext(StorageContext);
   const router = useRouter();
@@ -95,31 +97,48 @@ export default function FileListMenuModalContent({
     router.reload();
   };
 
+  const handlePaste = () => {
+    paste();
+    onClose();
+  };
+
   return (
     <ModalContent>
       <ModalHeader>FileMenu</ModalHeader>
       <ModalCloseButton />
       <ModalBody>
-        {selectedFiles.length ? (
+        {selectedFiles.length || context.globalFiles.length ? (
           <VStack alignItems="start" w="40%" mx="auto">
-            <Button
-              variant="ghost"
-              onClick={() => onClick(FileSelectStatus.move)}
-            >
-              <MdOutlineDriveFileMove size="25" />
-              <Text fontWeight="400" ml="2">
-                移動
-              </Text>
-            </Button>
-            <Button
-              variant="ghost"
-              onClick={() => onClick(FileSelectStatus.copy)}
-            >
-              <AiOutlineCopy size="25" />
-              <Text fontWeight="400" ml="2">
-                コピ−
-              </Text>
-            </Button>
+            {context.status !== FileSelectStatus.move && (
+              <Button
+                variant="ghost"
+                onClick={() => onClick(FileSelectStatus.move)}
+              >
+                <MdOutlineDriveFileMove size="25" />
+                <Text fontWeight="400" ml="2">
+                  移動
+                </Text>
+              </Button>
+            )}
+            {context.status !== FileSelectStatus.copy && (
+              <Button
+                variant="ghost"
+                onClick={() => onClick(FileSelectStatus.copy)}
+              >
+                <AiOutlineCopy size="25" />
+                <Text fontWeight="400" ml="2">
+                  コピ−
+                </Text>
+              </Button>
+            )}
+            {context.status !== FileSelectStatus.default && (
+              <Button variant="ghost" onClick={handlePaste}>
+                <MdOutlineDriveFileMove size="25" />
+                <Text fontWeight="400" ml="2">
+                  貼りけ
+                </Text>
+              </Button>
+            )}
             <Button variant="ghost" onClick={download}>
               <AiOutlineDownload size="25" />
               <Text fontWeight="400" ml="2">
