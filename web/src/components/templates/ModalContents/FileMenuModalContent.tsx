@@ -12,7 +12,7 @@ import {
 import { useRouter } from "next/router";
 import { Dispatch, SetStateAction } from "react";
 import { AiOutlineDownload } from "react-icons/ai";
-import { FaRegTrashAlt } from "react-icons/fa";
+import { CgTrashEmpty } from "react-icons/cg";
 import {
   MdDriveFileRenameOutline,
   MdOutlineDriveFileMove,
@@ -104,7 +104,7 @@ export default function FileMenuModalContent({
             variant="ghost"
             onClick={() => setStatus(FileMenuStatus.remove)}
           >
-            <FaRegTrashAlt size="20" />
+            <CgTrashEmpty size="25" />
             <Text fontWeight="400" ml="2">
               削除
             </Text>
