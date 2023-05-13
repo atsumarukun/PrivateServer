@@ -86,6 +86,38 @@ func (_ StorageController) Remove(c *gin.Context) {
 	})
 }
 
+func (_ StorageController) Move(c *gin.Context) {
+	type MoveRequestQuery struct {
+		Keys []string `form:"keys[]"`
+	}
+	var query MoveRequestQuery
+	if err := c.ShouldBindQuery(&query); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err,
+		})
+	}
+	type MoveRequestBody struct {
+		Path string `json:"path"`
+	}
+	var body MoveRequestBody
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err,
+		})
+	}
+	for _, key := range query.Keys {
+		fileName := key[strings.LastIndex(key, "/"):]
+		if err := os.Rename(fmt.Sprintf("/go/src/api/storage/%s", key), fmt.Sprintf("/go/src/api/storage/%s/%s", body.Path, fileName)); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err,
+			})
+		}
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "ok",
+	})
+}
+
 func (_ StorageController) Copy(c *gin.Context) {
 	type CopyRequestQuery struct {
 		Keys []string `form:"keys[]"`

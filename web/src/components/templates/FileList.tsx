@@ -83,11 +83,15 @@ export default function FileList({ files }: StorageProps) {
     } else if (e.ctrlKey) {
       if (e.key === "c") {
         context.setStatus(FileSelectStatus.copy);
-        context.setGlobalFiles(selectedFiles);
-        context.setFilePath(
-          typeof router.query.path === "string" ? router.query.path : "/"
-        );
+      } else if (e.key === "x") {
+        context.setStatus(FileSelectStatus.move);
+      } else {
+        return;
       }
+      context.setGlobalFiles(selectedFiles);
+      context.setFilePath(
+        typeof router.query.path === "string" ? router.query.path : "/"
+      );
     }
   };
 
@@ -104,6 +108,29 @@ export default function FileList({ files }: StorageProps) {
         if (res.status === 200) {
           toast({
             title: "コピーしました.",
+            status: "success",
+            duration: 200,
+            isClosable: true,
+          });
+        } else {
+          toast({
+            title: "エラーが発生しました.",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          });
+        }
+      } else if (context.status === FileSelectStatus.move) {
+        const query = `keys[]=${context.filePath}/${context.globalFiles.join(
+          `&keys[]=${context.filePath}/`
+        )}`;
+        const res = await fetch(`/api/storage/move?${query}`, {
+          method: "PUT",
+          body: JSON.stringify({ path: router.query.path ?? "/" }),
+        });
+        if (res.status === 200) {
+          toast({
+            title: "移動しました.",
             status: "success",
             duration: 200,
             isClosable: true,

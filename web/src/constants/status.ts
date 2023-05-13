@@ -1,6 +1,7 @@
 export const FileSelectStatus = {
   default: 0,
-  copy: 1,
+  move: 1,
+  copy: 2,
 };
 
 export const FileMenuStatus = {

@@ -26,6 +26,7 @@ func Router() *gin.Engine {
 			s.GET("/", ctrl.Get)
 			s.PUT("/", ctrl.Rename)
 			s.DELETE("/", ctrl.Remove)
+			s.PUT("/move", ctrl.Move)
 			s.PUT("/copy", ctrl.Copy)
 		}
 	}

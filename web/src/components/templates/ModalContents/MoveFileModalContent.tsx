@@ -35,10 +35,10 @@ export default function MoveFileModalContent({ fileName, onClose }: Props) {
 
   const onClick = async () => {
     const res = await fetch(
-      `/api/storage/rename?key=${router.query.path ?? ""}/${fileName}`,
+      `/api/storage/move?keys[]=${router.query.path ?? ""}/${fileName}`,
       {
         method: "PUT",
-        body: JSON.stringify({ key: `${path}/${fileName}` }),
+        body: JSON.stringify({ path: path }),
       }
     );
     if (res.status === 200) {
