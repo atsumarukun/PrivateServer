@@ -67,7 +67,6 @@ export default function FileMenuModalContent({
       });
     }
     onClose();
-    router.reload();
   };
 
   return (

@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useContext } from "react";
-import { AiOutlineCopy } from "react-icons/ai";
+import { AiOutlineCopy, AiOutlineDownload } from "react-icons/ai";
 import { MdOutlineDriveFileMove } from "react-icons/md";
 
 interface Props {
@@ -26,6 +26,7 @@ export default function FileListMenuModalContent({
 }: Props) {
   const context = useContext(StorageContext);
   const router = useRouter();
+  const toast = useToast();
 
   const onClick = (status: number) => {
     context.setStatus(status);
@@ -33,6 +34,38 @@ export default function FileListMenuModalContent({
     context.setFilePath(
       typeof router.query.path === "string" ? router.query.path : "/"
     );
+    onClose();
+  };
+
+  const download = async () => {
+    try {
+      for (var fileName of selectedFiles) {
+        const res = await fetch(
+          `/api/storage/download?key=${router.query.path ?? ""}/${fileName}`
+        );
+        if (res.status === 200) {
+          const blob = new Blob([await res.arrayBuffer()]);
+          const link = document.createElement("a");
+          link.href = URL.createObjectURL(blob);
+          link.download = fileName;
+          link.click();
+          link.remove();
+          toast({
+            title: "保存しました.",
+            status: "success",
+            duration: 200,
+            isClosable: true,
+          });
+        }
+      }
+    } catch {
+      toast({
+        title: "エラーが発生しました.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
     onClose();
   };
 
@@ -59,6 +92,12 @@ export default function FileListMenuModalContent({
               <AiOutlineCopy size="25" />
               <Text fontWeight="400" ml="2">
                 コピ−
+              </Text>
+            </Button>
+            <Button variant="ghost" onClick={download}>
+              <AiOutlineDownload size="25" />
+              <Text fontWeight="400" ml="2">
+                ダウンロード
               </Text>
             </Button>
           </VStack>
