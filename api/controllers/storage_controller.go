@@ -42,6 +42,19 @@ func (_ StorageController) Get(c *gin.Context) {
 	})
 }
 
+func (_ StorageController) Upload(c *gin.Context) {
+	file, err :=  c.FormFile("file")
+	if  err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err,
+		})
+	}
+	c.SaveUploadedFile(file, "/go/src/api/storage/" + file.Filename)
+	c.JSON(http.StatusOK, gin.H{
+		"message": "ok",
+	})
+}
+
 func (_ StorageController) Rename(c *gin.Context) {
 	type RenameRequest struct {
 		Key string `json:"key"`

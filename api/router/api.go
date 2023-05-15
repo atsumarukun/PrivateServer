@@ -24,6 +24,7 @@ func Router() *gin.Engine {
 		{
 			ctrl := controllers.StorageController{}
 			s.GET("/", ctrl.Get)
+			s.POST("/", ctrl.Upload)
 			s.PUT("/", ctrl.Rename)
 			s.DELETE("/", ctrl.Remove)
 			s.PUT("/move", ctrl.Move)

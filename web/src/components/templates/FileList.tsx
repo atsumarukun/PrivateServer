@@ -15,11 +15,19 @@ import { AiFillFolder, AiFillFile } from "react-icons/ai";
 import { BsMusicNoteBeamed } from "react-icons/bs";
 import { MdMovie } from "react-icons/md";
 import StorageCardWrapper from "../parts/StorageCardWrapper";
-import { KeyboardEvent, MouseEvent, useContext, useRef, useState } from "react";
+import {
+  KeyboardEvent,
+  MouseEvent,
+  useCallback,
+  useContext,
+  useRef,
+  useState,
+} from "react";
 import { FileSelectStatus } from "@/constants/status";
 import { StorageContext } from "@/providers/storageProvider";
 import FileListMenuModalContent from "./ModalContents/FileListMenuModalContent";
-import PasteFileMenuModalContent from "./ModalContents/PasteFileModalContent";
+import { useDropzone } from "react-dropzone";
+import axios from "axios";
 
 export default function FileList({ files }: StorageProps) {
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
@@ -111,6 +119,34 @@ export default function FileList({ files }: StorageProps) {
     }
   };
 
+  const onDrop = useCallback(async (files: File[]) => {
+    const formData = new FormData();
+    formData.append("file", files[0]);
+    const res = await axios.post("/api/storage/upload", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    if (res.status === 200) {
+      toast({
+        title: "アップロードしました.",
+        status: "success",
+        duration: 200,
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: "エラーが発生しました.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+    router.reload();
+  }, []);
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    noClick: true,
+  });
+
   const paste = async () => {
     if (context.status === FileSelectStatus.copy) {
       const query = `keys[]=${context.filePath}/${context.globalFiles.join(
@@ -176,16 +212,21 @@ export default function FileList({ files }: StorageProps) {
   return (
     <>
       <Box
-        position="absolute"
+        position="fixed"
         h="100vh"
         w="100vw"
         top="0"
         left="0"
+        zIndex="-1"
         tabIndex={0}
         onClick={() => setSelectedFiles([])}
         onContextMenu={(e) => onContextMenu(e)}
         onKeyDown={(e) => keyboardPaste(e)}
-      />
+      >
+        <Box {...getRootProps()} h="100%" w="100%">
+          <input {...getInputProps()} />
+        </Box>
+      </Box>
       <Grid
         gap="8"
         py="10"
