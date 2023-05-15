@@ -122,9 +122,13 @@ export default function FileList({ files }: StorageProps) {
   const onDrop = useCallback(async (files: File[]) => {
     const formData = new FormData();
     formData.append("file", files[0]);
-    const res = await axios.post("/api/storage/upload", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    const res = await axios.post(
+      `/api/storage/upload?path=${router.query.path ?? "/"}`,
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      }
+    );
     if (res.status === 200) {
       toast({
         title: "アップロードしました.",

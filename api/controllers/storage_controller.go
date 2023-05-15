@@ -49,7 +49,7 @@ func (_ StorageController) Upload(c *gin.Context) {
 			"error": err,
 		})
 	}
-	c.SaveUploadedFile(file, "/go/src/api/storage/" + file.Filename)
+	c.SaveUploadedFile(file, fmt.Sprintf("/go/src/api/storage/%s/%s", c.Query("path"), file.Filename))
 	c.JSON(http.StatusOK, gin.H{
 		"message": "ok",
 	})

@@ -10,7 +10,7 @@ export default async function upload(
   res: NextApiResponse
 ) {
   const response = await axios.post(
-    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/storage`,
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/storage?path=${req.query.path}`,
     req,
     { headers: { "Content-Type": req.headers["content-type"] } }
   );
