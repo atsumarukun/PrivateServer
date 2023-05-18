@@ -234,6 +234,7 @@ export default function FileList({ files }: StorageProps) {
       <Grid
         gap="8"
         py="10"
+        mb="10"
         templateColumns={{
           base: "repeat(2, 1fr)",
           md: "repeat(4, 1fr)",
