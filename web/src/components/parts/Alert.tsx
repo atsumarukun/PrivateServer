@@ -46,7 +46,7 @@ export default function Alert({ onClick, Icon, message, size }: Props) {
       >
         <AlertDialogOverlay />
 
-        <AlertDialogContent>
+        <AlertDialogContent mx="5">
           <AlertDialogHeader>{message.title}</AlertDialogHeader>
           <AlertDialogCloseButton />
           <AlertDialogBody whiteSpace="pre-wrap">

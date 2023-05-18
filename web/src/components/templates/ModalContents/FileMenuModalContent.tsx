@@ -72,7 +72,7 @@ export default function FileMenuModalContent({
   };
 
   return (
-    <ModalContent>
+    <ModalContent mx="5">
       <ModalHeader>{fileName}</ModalHeader>
       <ModalCloseButton />
       <ModalBody>

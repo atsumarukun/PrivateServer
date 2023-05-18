@@ -103,7 +103,7 @@ export default function FileListMenuModalContent({
   };
 
   return (
-    <ModalContent>
+    <ModalContent mx="5">
       <ModalHeader>FileMenu</ModalHeader>
       <ModalCloseButton />
       <ModalBody>

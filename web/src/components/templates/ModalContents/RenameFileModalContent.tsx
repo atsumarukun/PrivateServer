@@ -70,7 +70,7 @@ export default function RenameFileModalContent({ fileName, onClose }: Props) {
   };
 
   return (
-    <ModalContent>
+    <ModalContent mx="5">
       <ModalHeader>{fileName}</ModalHeader>
       <ModalCloseButton />
       <ModalBody>

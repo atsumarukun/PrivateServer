@@ -62,7 +62,7 @@ export default function MoveFileModalContent({ fileName, onClose }: Props) {
   };
 
   return (
-    <ModalContent>
+    <ModalContent mx="5">
       <ModalHeader>{fileName}</ModalHeader>
       <ModalCloseButton />
       <ModalBody>
