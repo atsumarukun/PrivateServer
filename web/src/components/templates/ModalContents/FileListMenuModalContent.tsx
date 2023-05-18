@@ -144,7 +144,11 @@ export default function FileListMenuModalContent({
 
   return (
     <ModalContent mx="5">
-      <ModalHeader>FileMenu</ModalHeader>
+      <ModalHeader>
+        {selectedFiles.length || context.globalFiles.length
+          ? "メニュー"
+          : "ファイルのアップロード"}
+      </ModalHeader>
       <ModalCloseButton />
       <ModalBody>
         {selectedFiles.length || context.globalFiles.length ? (
