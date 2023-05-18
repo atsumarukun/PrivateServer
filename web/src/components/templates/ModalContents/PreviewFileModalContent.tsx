@@ -25,7 +25,6 @@ export default function PreviewFileModalContent({ file, onClick }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    console.log(true);
     videoRef.current?.load();
   }, [file]);
 
