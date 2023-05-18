@@ -1,6 +1,6 @@
 import IconCard from "@/components/parts/IconCard";
 import ImageCard from "@/components/parts/ImageCard";
-import { StorageProps } from "@/constants/props";
+import { FileProps, StorageProps } from "@/constants/props";
 import {
   Box,
   Grid,
@@ -28,31 +28,29 @@ import { StorageContext } from "@/providers/storageProvider";
 import FileListMenuModalContent from "./ModalContents/FileListMenuModalContent";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
+import PreviewFileModalContent from "./ModalContents/PreviewFileModalContent";
 
 export default function FileList({ files }: StorageProps) {
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
+  const [previewFile, setPreviewFile] = useState<FileProps>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const context = useContext(StorageContext);
   const finalRef = useRef(null);
   const router = useRouter();
   const toast = useToast();
 
-  const onClick = (
-    fileName: string,
-    mimeType: string,
-    e: MouseEvent<HTMLDivElement>
-  ) => {
+  const onClick = (file: FileProps, e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     if (e.ctrlKey) {
       // ファイル選択(ctrlを押しながらクリック)
-      if (selectedFiles.includes(fileName)) {
-        const index = selectedFiles.indexOf(fileName);
+      if (selectedFiles.includes(file.Name)) {
+        const index = selectedFiles.indexOf(file.Name);
         setSelectedFiles([
           ...selectedFiles.slice(0, index),
           ...selectedFiles.slice(index + 1),
         ]);
       } else {
-        setSelectedFiles([fileName, ...selectedFiles]);
+        setSelectedFiles([file.Name, ...selectedFiles]);
       }
     } else {
       if (
@@ -60,15 +58,16 @@ export default function FileList({ files }: StorageProps) {
         context.status === FileSelectStatus.default
       ) {
         // 選択ファイル変更(通常クリック)
-        setSelectedFiles([fileName]);
+        setSelectedFiles([file.Name]);
       } else {
         // ファイル表示(通常クリック)
-        if (mimeType === "dir") {
-          router.push({ query: `path=${router.query.path ?? ""}/${fileName}` });
+        if (file.MimeType === "dir") {
+          router.push({
+            query: `path=${router.query.path ?? ""}/${file.Name}`,
+          });
         } else {
-          document.location.href = `${process.env.NEXT_PUBLIC_STORAGE}${
-            router.query.path ?? ""
-          }/${fileName}`;
+          setPreviewFile(file);
+          onOpen();
         }
         setSelectedFiles([]);
       }
@@ -77,6 +76,7 @@ export default function FileList({ files }: StorageProps) {
 
   const onContextMenu = (e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
+    setPreviewFile(undefined);
     onOpen();
   };
 
@@ -213,6 +213,16 @@ export default function FileList({ files }: StorageProps) {
     }
   };
 
+  const changePreviewFile = (dIndex: number) => {
+    if (!previewFile) return;
+    const index = files.indexOf(previewFile);
+    if (0 < index && dIndex < 0) {
+      setPreviewFile(files[index + dIndex]);
+    } else if (index < files.length - 1 && 0 < dIndex) {
+      setPreviewFile(files[index + dIndex]);
+    }
+  };
+
   return (
     <>
       <Box
@@ -248,7 +258,7 @@ export default function FileList({ files }: StorageProps) {
                 tabIndex={0}
                 fileName={f.Name}
                 onKeyDown={(e) => onKeyDown(e)}
-                onClick={(e) => onClick(f.Name, f.MimeType, e)}
+                onClick={(e) => onClick(f, e)}
                 border={selectedFiles.includes(f.Name) ? "solid 2px gray" : ""}
                 key={i}
               >
@@ -267,7 +277,7 @@ export default function FileList({ files }: StorageProps) {
                 tabIndex={0}
                 fileName={f.Name}
                 onKeyDown={(e) => onKeyDown(e)}
-                onClick={(e) => onClick(f.Name, f.MimeType, e)}
+                onClick={(e) => onClick(f, e)}
                 border={selectedFiles.includes(f.Name) ? "solid 2px gray" : ""}
                 key={i}
               >
@@ -289,7 +299,7 @@ export default function FileList({ files }: StorageProps) {
                 tabIndex={0}
                 fileName={f.Name}
                 onKeyDown={(e) => onKeyDown(e)}
-                onClick={(e) => onClick(f.Name, f.MimeType, e)}
+                onClick={(e) => onClick(f, e)}
                 border={selectedFiles.includes(f.Name) ? "solid 2px gray" : ""}
                 key={i}
               >
@@ -304,13 +314,21 @@ export default function FileList({ files }: StorageProps) {
         isOpen={isOpen}
         onClose={onClose}
         isCentered
+        size={previewFile ? "6xl" : "md"}
       >
         <ModalOverlay />
-        <FileListMenuModalContent
-          selectedFiles={selectedFiles}
-          onClose={onClose}
-          paste={paste}
-        />
+        {previewFile ? (
+          <PreviewFileModalContent
+            file={previewFile}
+            onClick={(dIndex) => changePreviewFile(dIndex)}
+          />
+        ) : (
+          <FileListMenuModalContent
+            selectedFiles={selectedFiles}
+            onClose={onClose}
+            paste={paste}
+          />
+        )}
       </Modal>
     </>
   );

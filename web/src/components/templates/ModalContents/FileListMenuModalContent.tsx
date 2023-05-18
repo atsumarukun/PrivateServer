@@ -8,7 +8,6 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalHeader,
-  Stack,
   Text,
   VStack,
   useToast,

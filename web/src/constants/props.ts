@@ -1,6 +1,8 @@
+export interface FileProps {
+  Name: string;
+  MimeType: string;
+}
+
 export interface StorageProps {
-  files: {
-    Name: string;
-    MimeType: string;
-  }[];
+  files: FileProps[];
 }
