@@ -1,3 +1,4 @@
+import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function remove(
@@ -10,16 +11,12 @@ export default async function remove(
   } else if (Array.isArray(req.query["keys[]"])) {
     query = `keys[]=${req.query["keys[]"].join("&keys[]=")}`;
   }
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/storage?${query}`,
-    {
-      method: req.method,
-    }
+  const response = await axios.delete(
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/storage?${query}`
   );
-  const data = await response.json();
   if (response.status === 200) {
-    res.status(response.status).json(data.message);
+    res.status(response.status).json(response.data);
   } else {
-    res.status(response.status).json(data.error);
+    res.status(response.status).json(response.data);
   }
 }

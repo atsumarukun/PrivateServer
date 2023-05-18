@@ -3,13 +3,14 @@ import Link from "next/link";
 import Alert from "../parts/Alert";
 import { messages } from "@/constants/message";
 import { CiPower } from "react-icons/ci";
+import axios from "axios";
 
 export default function Header() {
   const toast = useToast();
   const alertMessage = messages.alert.shutdown;
 
   const onClick = async () => {
-    const res = await fetch("/api/power/shutdown");
+    const res = await axios.get("/api/power/shutdown");
     if (res.status === 200) {
       toast({
         title: "シャットダウンしました.",

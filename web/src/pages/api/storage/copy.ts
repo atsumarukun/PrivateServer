@@ -1,3 +1,4 @@
+import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function copy(req: NextApiRequest, res: NextApiResponse) {
@@ -7,17 +8,14 @@ export default async function copy(req: NextApiRequest, res: NextApiResponse) {
   } else if (Array.isArray(req.query["keys[]"])) {
     query = `keys[]=${req.query["keys[]"].join("&keys[]=")}`;
   }
-  const response = await fetch(
+  const response = await axios.put(
     `${process.env.NEXT_PUBLIC_API_ENDPOINT}/storage/copy?${query}`,
-    {
-      method: req.method,
-      body: req.body,
-    }
+    req.body,
+    { headers: { "Content-Type": req.headers["content-type"] } }
   );
-  const data = await response.json();
   if (response.status === 200) {
-    res.status(response.status).json(data.fileName);
+    res.status(response.status).json(response.data);
   } else {
-    res.status(response.status).json(data.error);
+    res.status(response.status).json(response.data);
   }
 }

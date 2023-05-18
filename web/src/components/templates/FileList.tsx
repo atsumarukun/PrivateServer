@@ -85,9 +85,7 @@ export default function FileList({ files }: StorageProps) {
       `&keys[]=${router.query.path ?? ""}/`
     )}`;
     if (e.key === "Delete") {
-      const res = await fetch(`/api/storage/remove?${query}`, {
-        method: "DELETE",
-      });
+      const res = await axios.delete(`/api/storage/remove?${query}`);
       if (res.status === 200) {
         toast({
           title: "削除しました.",
@@ -156,10 +154,11 @@ export default function FileList({ files }: StorageProps) {
       const query = `keys[]=${context.filePath}/${context.globalFiles.join(
         `&keys[]=${context.filePath}/`
       )}`;
-      const res = await fetch(`/api/storage/copy?${query}`, {
-        method: "PUT",
-        body: JSON.stringify({ path: router.query.path ?? "/" }),
-      });
+      const res = await axios.put(
+        `/api/storage/copy?${query}`,
+        JSON.stringify({ path: router.query.path ?? "/" }),
+        { headers: { "Content-Type": "application/json" } }
+      );
       if (res.status === 200) {
         toast({
           title: "コピーしました.",
@@ -179,10 +178,11 @@ export default function FileList({ files }: StorageProps) {
       const query = `keys[]=${context.filePath}/${context.globalFiles.join(
         `&keys[]=${context.filePath}/`
       )}`;
-      const res = await fetch(`/api/storage/move?${query}`, {
-        method: "PUT",
-        body: JSON.stringify({ path: router.query.path ?? "/" }),
-      });
+      const res = await axios.put(
+        `/api/storage/move?${query}`,
+        JSON.stringify({ path: router.query.path ?? "/" }),
+        { headers: { "Content-Type": "application/json" } }
+      );
       if (res.status === 200) {
         toast({
           title: "移動しました.",

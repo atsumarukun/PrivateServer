@@ -1,12 +1,13 @@
+import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function rename(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_STORAGE}/${req.query.key}`
+  const response = await axios.get(
+    `${process.env.NEXT_PUBLIC_STORAGE}/${req.query.key}`,
+    { responseType: "arraybuffer" }
   );
-  const blob = await response.blob();
-  res.send(Buffer.from(await blob.arrayBuffer()));
+  res.send(response.data);
 }

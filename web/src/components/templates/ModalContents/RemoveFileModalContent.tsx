@@ -8,6 +8,7 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
+import axios from "axios";
 import { useRouter } from "next/router";
 
 interface Props {
@@ -20,11 +21,8 @@ export default function RemoveFileModalContent({ fileName, onClose }: Props) {
   const toast = useToast();
 
   const handleRemove = async () => {
-    const res = await fetch(
-      `/api/storage/remove?keys[]=${router.query.path ?? ""}/${fileName}`,
-      {
-        method: "DELETE",
-      }
+    const res = await axios.delete(
+      `/api/storage/remove?keys[]=${router.query.path ?? ""}/${fileName}`
     );
     if (res.status === 200) {
       toast({

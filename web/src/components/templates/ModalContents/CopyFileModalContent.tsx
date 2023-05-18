@@ -9,6 +9,7 @@ import {
   VStack,
   useToast,
 } from "@chakra-ui/react";
+import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -26,19 +27,19 @@ export default function CopyFileModalContent({ fileName, onClose }: Props) {
   const [files, setFiles] = useState<StorageProps>();
 
   useEffect(() => {
-    const fetchFunction = async () => {
-      const res = await fetch(`/api/storage/gets?path=${path}`);
-      setFiles(await res.json());
+    const axiosFunction = async () => {
+      const res = await axios.get(`/api/storage/gets?path=${path}`);
+      setFiles(res.data);
     };
-    fetchFunction();
+    axiosFunction();
   }, [path]);
 
   const onClick = async () => {
-    const res = await fetch(
+    const res = await axios.put(
       `/api/storage/copy?keys[]=${router.query.path ?? ""}/${fileName}`,
+      JSON.stringify({ path: path }),
       {
-        method: "PUT",
-        body: JSON.stringify({ path: path }),
+        headers: { "Content-Type": "application/json" },
       }
     );
     if (res.status === 200) {

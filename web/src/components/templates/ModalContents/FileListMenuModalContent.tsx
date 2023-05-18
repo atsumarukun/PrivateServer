@@ -10,6 +10,7 @@ import {
   VStack,
   useToast,
 } from "@chakra-ui/react";
+import axios from "axios";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import { AiOutlineCopy, AiOutlineDownload } from "react-icons/ai";
@@ -43,11 +44,12 @@ export default function FileListMenuModalContent({
   const download = async () => {
     try {
       for (var fileName of selectedFiles) {
-        const res = await fetch(
-          `/api/storage/download?key=${router.query.path ?? ""}/${fileName}`
+        const res = await axios.get(
+          `/api/storage/download?key=${router.query.path ?? ""}/${fileName}`,
+          { responseType: "arraybuffer" }
         );
         if (res.status === 200) {
-          const blob = new Blob([await res.arrayBuffer()]);
+          const blob = new Blob([res.data]);
           const link = document.createElement("a");
           link.href = URL.createObjectURL(blob);
           link.download = fileName;
@@ -76,9 +78,7 @@ export default function FileListMenuModalContent({
     const query = `keys[]=${router.query.path ?? ""}/${selectedFiles.join(
       `&keys[]=${router.query.path ?? ""}/`
     )}`;
-    const res = await fetch(`/api/storage/remove?${query}`, {
-      method: "DELETE",
-    });
+    const res = await axios.delete(`/api/storage/remove?${query}`);
     if (res.status === 200) {
       toast({
         title: "削除しました.",

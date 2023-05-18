@@ -16,6 +16,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
@@ -42,11 +43,11 @@ export default function RenameFileModalContent({ fileName, onClose }: Props) {
     }
     data.key = `${router.query.path ?? ""}/${data.key}`;
 
-    const res = await fetch(
+    const res = await axios.put(
       `/api/storage/rename?key=${router.query.path ?? ""}/${fileName}`,
+      JSON.stringify(data),
       {
-        method: "PUT",
-        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
       }
     );
     if (res.status === 200) {

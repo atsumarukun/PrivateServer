@@ -1,6 +1,7 @@
 import { GetServerSidePropsContext } from "next";
 import FileList from "@/components/templates/FileList";
 import { StorageProps } from "@/constants/props";
+import axios from "axios";
 
 export default function Storage({ files }: StorageProps) {
   return (
@@ -11,11 +12,10 @@ export default function Storage({ files }: StorageProps) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const res = await fetch(
+  const res = await axios.get(
     `${process.env.NEXT_PUBLIC_API_ENDPOINT}/storage?path=${
       context.query.path ?? "/"
     }`
   );
-  const data = await res.json();
-  return { props: data };
+  return { props: res.data };
 }

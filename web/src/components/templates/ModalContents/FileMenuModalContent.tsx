@@ -9,6 +9,7 @@ import {
   VStack,
   useToast,
 } from "@chakra-ui/react";
+import axios from "axios";
 import { useRouter } from "next/router";
 import { Dispatch, SetStateAction } from "react";
 import { AiOutlineCopy, AiOutlineDownload } from "react-icons/ai";
@@ -33,12 +34,13 @@ export default function FileMenuModalContent({
   const toast = useToast();
 
   const download = async () => {
-    const res = await fetch(
-      `/api/storage/download?key=${router.query.path ?? ""}/${fileName}`
+    const res = await axios.get(
+      `/api/storage/download?key=${router.query.path ?? ""}/${fileName}`,
+      { responseType: "arraybuffer" }
     );
     if (res.status === 200) {
       try {
-        const blob = new Blob([await res.arrayBuffer()]);
+        const blob = new Blob([res.data]);
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
         link.download = fileName;
