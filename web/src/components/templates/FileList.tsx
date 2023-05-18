@@ -215,11 +215,12 @@ export default function FileList({ files }: StorageProps) {
 
   const changePreviewFile = (dIndex: number) => {
     if (!previewFile) return;
-    const index = files.indexOf(previewFile);
+    const fs = files.filter((f) => f.MimeType !== "dir");
+    const index = fs.indexOf(previewFile);
     if (0 < index && dIndex < 0) {
-      setPreviewFile(files[index + dIndex]);
-    } else if (index < files.length - 1 && 0 < dIndex) {
-      setPreviewFile(files[index + dIndex]);
+      setPreviewFile(fs[index + dIndex]);
+    } else if (index < fs.length - 1 && 0 < dIndex) {
+      setPreviewFile(fs[index + dIndex]);
     }
   };
 
