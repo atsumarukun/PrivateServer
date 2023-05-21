@@ -25,7 +25,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.ACCESS_TOKEN }}
 
-        - name: Create dot env file
+      - name: Create dot env file
       - shell: bash
         run: |
           touch api/.env
