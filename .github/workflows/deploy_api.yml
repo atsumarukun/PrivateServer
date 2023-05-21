@@ -25,11 +25,19 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.ACCESS_TOKEN }}
 
+        - name: Create dot env file
+      - shell: bash
+        run: |
+          touch api/.env
+          echo "HOST=${{ secrets.HOST }}" >> api/.env
+          echo "HOST_USER=${{ secrets.HOST_USER }}" >> api/.env
+          echo "HOST_PORT=${{ secrets.HOST_PORT }}" >> api/.env
+
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
           context: ./api
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/privateserver_api:latest
-            ghcr.io/${{ github.repository_owner }}/privateserver_api:1.0.0
+            ghcr.io/${{ github.repository_owner }}/privateserver-api:latest
+            ghcr.io/${{ github.repository_owner }}/privateserver-api:1.0.0
