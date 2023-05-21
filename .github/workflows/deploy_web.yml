@@ -28,8 +28,8 @@ jobs:
       - name: generate .env
         run: |
           touch ./web/.env
-          echo "NEXT_PUBLIC_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_API_ENDPOINT }}" >> ./api/.env
-          echo "NEXT_PUBLIC_STORAGE=${{ secrets.NEXT_PUBLIC_STORAGE }}" >> ./api/.env
+          echo "NEXT_PUBLIC_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_API_ENDPOINT }}" >> ./web/.env
+          echo "NEXT_PUBLIC_STORAGE=${{ secrets.NEXT_PUBLIC_STORAGE }}" >> ./web/.env
           ls -a ./api
 
       - name: Build and push
