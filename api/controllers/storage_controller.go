@@ -4,10 +4,14 @@ import (
 	"os"
 	"io"
 	"fmt"
+	"bytes"
 	"strings"
 	"net/http"
 	"io/ioutil"
+	"archive/zip"
 	"github.com/gin-gonic/gin"
+
+	"api/services"
 )
 
 type StorageController struct{}
@@ -53,6 +57,23 @@ func (_ StorageController) Upload(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "ok",
 	})
+}
+
+func (_ StorageController) Download(c *gin.Context) {
+	info, _ := os.Stat(fmt.Sprintf("/go/src/api/storage/%s", c.Query("key")))
+	if info.IsDir() {
+		b := new(bytes.Buffer)
+		w := zip.NewWriter(b)
+		serv := services.ZipService{}
+		serv.Zip(c.Query("key"), info.Name(), w)
+		_ = w.Close()
+		c.Header("Content-Disposition", fmt.Sprintf("attachment; filename=%s.zip", info.Name()))
+		c.Data(http.StatusOK, "application/octet-stream", b.Bytes())
+	} else {
+		file, _ := os.ReadFile(fmt.Sprintf("/go/src/api/storage/%s", c.Query("key")))
+		c.Header("Content-Disposition", fmt.Sprintf("attachment; filename=%s", info.Name()))
+		c.Data(http.StatusOK, "application/octet-stream", file)
+	}
 }
 
 func (_ StorageController) Rename(c *gin.Context) {

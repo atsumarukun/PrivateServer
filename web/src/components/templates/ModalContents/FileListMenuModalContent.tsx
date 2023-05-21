@@ -59,7 +59,7 @@ export default function FileListMenuModalContent({
           const blob = new Blob([res.data]);
           const link = document.createElement("a");
           link.href = URL.createObjectURL(blob);
-          link.download = fileName;
+          link.download = fileName.includes(".") ? fileName : fileName + ".zip";
           link.click();
           link.remove();
           toast({
