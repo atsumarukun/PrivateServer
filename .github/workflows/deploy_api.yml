@@ -25,8 +25,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.ACCESS_TOKEN }}
 
-      - name: generate .env
-        run: chmod +x set-up-env.test.sh && sh set-up-env.test.sh
+      - name: generate ./api/.env
         env:
           HOST: ${{ secrets.HOST }}
           HOST_USER: ${{ secrets.HOST_USER }}
