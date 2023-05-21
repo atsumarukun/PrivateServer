@@ -28,7 +28,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: .
+          context: ./api
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/api:latest
