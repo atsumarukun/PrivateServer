@@ -226,22 +226,6 @@ export default function FileList({ files }: StorageProps) {
 
   return (
     <>
-      <Box
-        position="fixed"
-        h="100vh"
-        w="100vw"
-        top="0"
-        left="0"
-        zIndex="-1"
-        tabIndex={0}
-        onClick={() => setSelectedFiles([])}
-        onContextMenu={(e) => onContextMenu(e)}
-        onKeyDown={(e) => keyboardPaste(e)}
-      >
-        <Box {...getRootProps()} h="100%" w="100%">
-          <input {...getInputProps()} />
-        </Box>
-      </Box>
       <Grid
         gap="8"
         py="10"
@@ -252,6 +236,21 @@ export default function FileList({ files }: StorageProps) {
           lg: "repeat(5, 1fr)",
         }}
       >
+        <Box
+          position="fixed"
+          h="100vh"
+          w="100vw"
+          top="0"
+          left="0"
+          tabIndex={0}
+          onClick={() => setSelectedFiles([])}
+          onContextMenu={(e) => onContextMenu(e)}
+          onKeyDown={(e) => keyboardPaste(e)}
+        >
+          <Box {...getRootProps()} h="100%" w="100%">
+            <input {...getInputProps()} />
+          </Box>
+        </Box>
         {files?.map((f, i) => {
           if (f.MimeType.includes("image")) {
             return (
