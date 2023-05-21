@@ -25,12 +25,12 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.ACCESS_TOKEN }}
 
-      - name: generate ./api/.env
-        run: touch ./api/.env
-        env:
-          HOST: ${{ secrets.HOST }}
-          HOST_USER: ${{ secrets.HOST_USER }}
-          HOST_PORT: ${{ secrets.HOST_PORT }}
+      - name: generate .env
+        run: |
+          touch ./api/.env
+          echo HOST=${{ secrets.HOST }} >> ./api/.env
+          echo HOST_USER=${{ secrets.HOST_USER }} >> ./api/.env
+          echo HOST_PORT=${{ secrets.HOST_PORT }} >> ./api/.env
 
       - name: Build and push
         uses: docker/build-push-action@v2
