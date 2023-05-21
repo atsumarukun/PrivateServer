@@ -26,6 +26,7 @@ jobs:
           password: ${{ secrets.ACCESS_TOKEN }}
 
       - name: generate ./web/.env
+        run: touch ./web/.env
         env:
           NEXT_PUBLIC_API_ENDPOINT: ${{ secrets.NEXT_PUBLIC_API_ENDPOINT }}
           NEXT_PUBLIC_STORAGE: ${{ secrets.NEXT_PUBLIC_STORAGE }}

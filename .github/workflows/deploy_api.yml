@@ -26,6 +26,7 @@ jobs:
           password: ${{ secrets.ACCESS_TOKEN }}
 
       - name: generate ./api/.env
+        run: touch ./api/.env
         env:
           HOST: ${{ secrets.HOST }}
           HOST_USER: ${{ secrets.HOST_USER }}
