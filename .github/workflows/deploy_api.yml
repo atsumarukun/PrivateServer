@@ -25,6 +25,13 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.ACCESS_TOKEN }}
 
+      - name: generate .env
+        run: chmod +x set-up-env.test.sh && sh set-up-env.test.sh
+        env:
+          HOST: ${{ secrets.HOST }}
+          HOST_USER: ${{ secrets.HOST_USER }}
+          HOST_PORT: ${{ secrets.HOST_PORT }}
+
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
@@ -33,7 +40,3 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository_owner }}/privateserver-api:latest
             ghcr.io/${{ github.repository_owner }}/privateserver-api:1.0.0
-          secrets: |
-            "HOST=${{ secrets.HOST }}"
-            "HOST_USER=${{ secrets.HOST_USER }}"
-            "HOST_PORT=${{ secrets.HOST_PORT }}"

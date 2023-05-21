@@ -25,6 +25,12 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.ACCESS_TOKEN }}
 
+      - name: generate .env
+        run: chmod +x set-up-env.test.sh && sh set-up-env.test.sh
+        env:
+          NEXT_PUBLIC_API_ENDPOINT: ${{ secrets.NEXT_PUBLIC_API_ENDPOINT }}
+          NEXT_PUBLIC_STORAGE: ${{ secrets.NEXT_PUBLIC_STORAGE }}
+
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
@@ -33,6 +39,3 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository_owner }}/privateserver-web:latest
             ghcr.io/${{ github.repository_owner }}/privateserver-web:1.0.0
-          secrets: |
-            "NEXT_PUBLIC_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_API_ENDPOINT }}"
-            "NEXT_PUBLIC_STORAGE=${{ secrets.NEXT_PUBLIC_STORAGE }}"
