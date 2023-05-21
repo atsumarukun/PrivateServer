@@ -31,5 +31,5 @@ jobs:
           context: ./api
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/api:latest
-            ghcr.io/${{ github.repository_owner }}/api:1.0.0
+            ghcr.io/${{ github.repository_owner }}/privateserver_api:latest
+            ghcr.io/${{ github.repository_owner }}/privateserver_api:1.0.0

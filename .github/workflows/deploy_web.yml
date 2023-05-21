@@ -31,5 +31,5 @@ jobs:
           context: ./web
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/web:latest
-            ghcr.io/${{ github.repository_owner }}/web:1.0.0
+            ghcr.io/${{ github.repository_owner }}/privateserver_web:latest
+            ghcr.io/${{ github.repository_owner }}/privateserver_web:1.0.0
