@@ -33,3 +33,6 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository_owner }}/privateserver-web:latest
             ghcr.io/${{ github.repository_owner }}/privateserver-web:1.0.0
+          secrets: |
+            "NEXT_PUBLIC_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_API_ENDPOINT }}"
+            "NEXT_PUBLIC_STORAGE=${{ secrets.NEXT_PUBLIC_STORAGE }}"
