@@ -12,13 +12,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Create dot env file
-      - shell: bash
-        run: |
-          touch web/.env
-          echo "NEXT_PUBLIC_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_API_ENDPOINT }}" >> web/.env
-          echo "NEXT_PUBLIC_STORAGE=${{ secrets.NEXT_PUBLIC_STORAGE }}" >> web/.env
-
       - name: Checkout
         uses: actions/checkout@v3
 
