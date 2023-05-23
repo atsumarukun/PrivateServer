@@ -36,6 +36,7 @@ export default function Header() {
         position="fixed"
         left="10%"
         right="10%"
+        zIndex="1"
       >
         <Link href="/">
           <Text fontSize="20" fontWeight="300">
