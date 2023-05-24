@@ -43,15 +43,11 @@ export default function FileList({ files }: StorageProps) {
     e.stopPropagation();
     if (e.ctrlKey) {
       // ファイル選択(ctrlを押しながらクリック)
-      if (selectedFiles.includes(file.Name)) {
-        const index = selectedFiles.indexOf(file.Name);
-        setSelectedFiles([
-          ...selectedFiles.slice(0, index),
-          ...selectedFiles.slice(index + 1),
-        ]);
-      } else {
-        setSelectedFiles([file.Name, ...selectedFiles]);
-      }
+      setSelectedFiles((files) =>
+        files.includes(file.Name)
+          ? files.filter((v) => v !== file.Name)
+          : [...files, file.Name]
+      );
     } else {
       if (
         context.globalFiles.length &&
