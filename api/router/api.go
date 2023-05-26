@@ -28,6 +28,7 @@ func Router() *gin.Engine {
 			s.PUT("/", ctrl.Rename)
 			s.DELETE("/", ctrl.Remove)
 			s.GET("/download", ctrl.Download)
+			s.POST("/create", ctrl.Create)
 			s.PUT("/move", ctrl.Move)
 			s.PUT("/copy", ctrl.Copy)
 		}

@@ -23,16 +23,20 @@ import {
   useRef,
   useState,
 } from "react";
-import { FileSelectStatus } from "@/constants/status";
+import { ContextMenuStatus, FileSelectStatus } from "@/constants/status";
 import { StorageContext } from "@/providers/storageProvider";
 import FileListMenuModalContent from "./ModalContents/FileListMenuModalContent";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import PreviewFileModalContent from "./ModalContents/PreviewFileModalContent";
+import CreateDirModalContent from "./ModalContents/CreateDirModalContent";
+import UploadFileModalContent from "./ModalContents/UploadFileModalContent";
+import ContextMenuModalContent from "./ModalContents/ContextMenuModalContent";
 
 export default function FileList({ files }: StorageProps) {
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [previewFile, setPreviewFile] = useState<FileProps>();
+  const [status, setStatus] = useState(ContextMenuStatus.default);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const context = useContext(StorageContext);
   const finalRef = useRef(null);
@@ -220,6 +224,13 @@ export default function FileList({ files }: StorageProps) {
     }
   };
 
+  const handleClose = () => {
+    setStatus(ContextMenuStatus.default);
+    setPreviewFile(undefined);
+    setSelectedFiles([]);
+    onClose();
+  };
+
   return (
     <>
       <Grid
@@ -308,7 +319,7 @@ export default function FileList({ files }: StorageProps) {
       <Modal
         finalFocusRef={finalRef}
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={handleClose}
         isCentered
         size={previewFile ? "6xl" : "md"}
       >
@@ -318,12 +329,22 @@ export default function FileList({ files }: StorageProps) {
             file={previewFile}
             onClick={(dIndex) => changePreviewFile(dIndex)}
           />
-        ) : (
+        ) : selectedFiles.length || context.globalFiles.length ? (
           <FileListMenuModalContent
             selectedFiles={selectedFiles}
-            onClose={onClose}
+            onClose={handleClose}
             paste={paste}
           />
+        ) : (
+          <>
+            {status === ContextMenuStatus.default && (
+              <ContextMenuModalContent onClick={setStatus} />
+            )}
+            {status === ContextMenuStatus.create && (
+              <CreateDirModalContent onClose={handleClose} />
+            )}
+            {status === ContextMenuStatus.upload && <UploadFileModalContent />}
+          </>
         )}
       </Modal>
     </>

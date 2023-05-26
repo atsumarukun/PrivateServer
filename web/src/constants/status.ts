@@ -11,3 +11,9 @@ export const FileMenuStatus = {
   copy: 3,
   remove: 4,
 };
+
+export const ContextMenuStatus = {
+  default: 0,
+  create: 1,
+  upload: 2,
+};

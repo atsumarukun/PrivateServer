@@ -76,6 +76,27 @@ func (_ StorageController) Download(c *gin.Context) {
 	}
 }
 
+
+func (_ StorageController) Create(c *gin.Context) {
+	type CreateRequest struct {
+		Name string `json:name"`
+	}
+	var req CreateRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err,
+		})
+	}
+	if err := os.Mkdir(fmt.Sprintf("/go/src/api/storage%s/%s", c.Query("path"), req.Name), 0777); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err,
+		})
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "ok",
+	})
+}
+
 func (_ StorageController) Rename(c *gin.Context) {
 	type RenameRequest struct {
 		Key string `json:"key"`
