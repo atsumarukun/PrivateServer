@@ -22,6 +22,9 @@ export default function ImageCard({ text, alt, src }: Props) {
             w="100%"
             textAlign="center"
             whiteSpace="nowrap"
+            textOverflow="ellipsis"
+            overflow="hidden"
+            px="2"
           >
             {text}
           </Text>

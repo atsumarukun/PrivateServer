@@ -20,6 +20,9 @@ export default function IconCard({ Icon, text }: Props) {
             w="100%"
             textAlign="center"
             whiteSpace="nowrap"
+            textOverflow="ellipsis"
+            overflow="hidden"
+            px="2"
           >
             {text}
           </Text>
