@@ -43,7 +43,7 @@ export default function FileListMenuModalContent({
 
   const download = async () => {
     try {
-      for (var fileName of selectedFiles) {
+      for (const fileName of selectedFiles) {
         const res = await axios.get(
           `/api/storage/download?key=${router.query.path ?? ""}/${fileName}`,
           { responseType: "arraybuffer" }

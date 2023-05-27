@@ -2,7 +2,7 @@ import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function move(req: NextApiRequest, res: NextApiResponse) {
-  var query = "";
+  let query = "";
   if (typeof req.query["keys[]"] === "string") {
     query = `keys[]=${req.query["keys[]"]}`;
   } else if (Array.isArray(req.query["keys[]"])) {

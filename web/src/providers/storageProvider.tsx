@@ -29,7 +29,7 @@ export const StorageContext = createContext<StorageContextProps>({
   setStatus: () => FileSelectStatus.default,
 });
 
-export default function ({ children }: Props) {
+export default function StorageProvider({ children }: Props) {
   const [globalFiles, setGlobalFiles] = useState<string[]>([]);
   const [filePath, setFilePath] = useState<string>("");
   const [status, setStatus] = useState(FileSelectStatus.default);

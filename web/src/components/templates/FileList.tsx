@@ -117,33 +117,36 @@ export default function FileList({ files }: StorageProps) {
     }
   };
 
-  const onDrop = useCallback(async (files: File[]) => {
-    const formData = new FormData();
-    formData.append("file", files[0]);
-    const res = await axios.post(
-      `/api/storage/upload?path=${router.query.path ?? "/"}`,
-      formData,
-      {
-        headers: { "Content-Type": "multipart/form-data" },
+  const onDrop = useCallback(
+    async (files: File[]) => {
+      const formData = new FormData();
+      formData.append("file", files[0]);
+      const res = await axios.post(
+        `/api/storage/upload?path=${router.query.path ?? "/"}`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      if (res.status === 200) {
+        toast({
+          title: "アップロードしました.",
+          status: "success",
+          duration: 200,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: "エラーが発生しました.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
       }
-    );
-    if (res.status === 200) {
-      toast({
-        title: "アップロードしました.",
-        status: "success",
-        duration: 200,
-        isClosable: true,
-      });
-    } else {
-      toast({
-        title: "エラーが発生しました.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-    router.reload();
-  }, []);
+      router.reload();
+    },
+    [router, toast]
+  );
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     noClick: true,
@@ -292,7 +295,7 @@ export default function FileList({ files }: StorageProps) {
               </StorageCardWrapper>
             );
           } else {
-            var Icon: IconType;
+            let Icon: IconType;
             if (f.MimeType.includes("audio")) {
               Icon = BsMusicNoteBeamed;
             } else if (f.MimeType.includes("video")) {

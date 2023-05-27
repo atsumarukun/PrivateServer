@@ -1,4 +1,4 @@
-import { AspectRatio, Box, GridItem, Text } from "@chakra-ui/react";
+import { AspectRatio, GridItem, Text } from "@chakra-ui/react";
 import { IconType } from "react-icons";
 
 interface Props {

@@ -17,7 +17,7 @@ import Link from "next/link";
 
 interface Props {
   file: FileProps;
-  onClick: (dIndex: number) => void;
+  onClick: (_dIndex: number) => void;
 }
 
 export default function PreviewFileModalContent({ file, onClick }: Props) {
@@ -63,6 +63,7 @@ export default function PreviewFileModalContent({ file, onClick }: Props) {
                 src={`${process.env.NEXT_PUBLIC_STORAGE}${
                   router.query.path ?? ""
                 }/${file.Name}`}
+                alt={file.Name}
                 h="100%"
                 w="100%"
                 objectFit="contain"

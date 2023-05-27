@@ -5,7 +5,7 @@ export default async function remove(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  var query = "";
+  let query = "";
   if (typeof req.query["keys[]"] === "string") {
     query = `keys[]=${req.query["keys[]"]}`;
   } else if (Array.isArray(req.query["keys[]"])) {

@@ -1,5 +1,4 @@
-import { AspectRatio, Box, GridItem, Image, Text } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+import { AspectRatio, GridItem, Image, Text } from "@chakra-ui/react";
 
 interface Props {
   text?: string;
@@ -8,7 +7,6 @@ interface Props {
 }
 
 export default function ImageCard({ text, alt, src }: Props) {
-  const router = useRouter();
   return (
     <AspectRatio ratio={1 / 1} bgImage={src} bgSize="cover">
       <GridItem bgColor="rgba(255,255,255,0.75)">
