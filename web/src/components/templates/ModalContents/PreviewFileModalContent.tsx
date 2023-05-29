@@ -81,6 +81,7 @@ export default function PreviewFileModalContent({ file, onClick }: Props) {
                 }}
                 controls
                 autoPlay
+                loop
               >
                 <source
                   src={`${process.env.NEXT_PUBLIC_STORAGE}${
