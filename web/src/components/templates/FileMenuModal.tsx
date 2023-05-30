@@ -7,11 +7,11 @@ import {
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import RenameFileModalContent from "./ModalContents/RenameFileModalContent";
-import FileMenuModalContent from "./ModalContents/FileMenuModalContent";
-import RemoveFileModalContent from "./ModalContents/RemoveFileModalContent";
-import MoveFileModalContent from "./ModalContents/MoveFileModalContent";
-import CopyFileModalContent from "./ModalContents/CopyFileModalContent";
+import RenameFileModalContent from "./modalContents/RenameFileModalContent";
+import FileMenuModalContent from "./modalContents/FileMenuModalContent";
+import RemoveFileModalContent from "./modalContents/RemoveFileModalContent";
+import MoveFileModalContent from "./modalContents/MoveFileModalContent";
+import CopyFileModalContent from "./modalContents/CopyFileModalContent";
 import { FileMenuStatus } from "@/constants/status";
 
 interface Props {

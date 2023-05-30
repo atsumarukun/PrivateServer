@@ -25,13 +25,13 @@ import {
 } from "react";
 import { ContextMenuStatus, FileSelectStatus } from "@/constants/status";
 import { StorageContext } from "@/providers/storageProvider";
-import FileListMenuModalContent from "./ModalContents/FileListMenuModalContent";
+import FileListMenuModalContent from "./modalContents/FileListMenuModalContent";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
-import PreviewFileModalContent from "./ModalContents/PreviewFileModalContent";
-import CreateDirModalContent from "./ModalContents/CreateDirModalContent";
-import UploadFileModalContent from "./ModalContents/UploadFileModalContent";
-import ContextMenuModalContent from "./ModalContents/ContextMenuModalContent";
+import PreviewFileModalContent from "./modalContents/PreviewFileModalContent";
+import CreateDirModalContent from "./modalContents/CreateDirModalContent";
+import UploadFileModalContent from "./modalContents/UploadFileModalContent";
+import ContextMenuModalContent from "./modalContents/ContextMenuModalContent";
 
 export default function FileList({ files }: StorageProps) {
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
