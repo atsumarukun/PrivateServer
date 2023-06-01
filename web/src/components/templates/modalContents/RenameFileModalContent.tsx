@@ -1,3 +1,4 @@
+import { FileProps } from "@/constants/props";
 import {
   RenameFileFormSchema,
   renameFileFormSchema,
@@ -21,11 +22,11 @@ import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
 interface Props {
-  fileName: string;
+  file: FileProps;
   onClose: () => void;
 }
 
-export default function RenameFileModalContent({ fileName, onClose }: Props) {
+export default function RenameFileModalContent({ file, onClose }: Props) {
   const router = useRouter();
   const toast = useToast();
 
@@ -38,13 +39,13 @@ export default function RenameFileModalContent({ fileName, onClose }: Props) {
   });
 
   const onSubmit = async (data: RenameFileFormSchema) => {
-    if (fileName.includes(".")) {
-      data.key += fileName.substring(fileName.lastIndexOf("."));
+    if (file.MimeType !== "dir") {
+      data.key += file.Name.substring(file.Name.lastIndexOf("."));
     }
     data.key = `${router.query.path ?? ""}/${data.key}`;
 
     const res = await axios.put(
-      `/api/storage/rename?key=${router.query.path ?? ""}/${fileName}`,
+      `/api/storage/rename?key=${router.query.path ?? ""}/${file.Name}`,
       JSON.stringify(data),
       {
         headers: { "Content-Type": "application/json" },
@@ -71,7 +72,7 @@ export default function RenameFileModalContent({ fileName, onClose }: Props) {
 
   return (
     <ModalContent mx="5">
-      <ModalHeader>{fileName}</ModalHeader>
+      <ModalHeader>{file.Name}</ModalHeader>
       <ModalCloseButton />
       <ModalBody>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -81,9 +82,9 @@ export default function RenameFileModalContent({ fileName, onClose }: Props) {
             <Input
               {...register("key")}
               defaultValue={
-                fileName.includes(".")
-                  ? fileName.substring(0, fileName.lastIndexOf("."))
-                  : fileName
+                file.MimeType === "dir"
+                  ? file.Name
+                  : file.Name.substring(0, file.Name.lastIndexOf("."))
               }
             />
           </FormControl>

@@ -1,3 +1,4 @@
+import { FileProps } from "@/constants/props";
 import { FileSelectStatus } from "@/constants/status";
 import { StorageContext } from "@/providers/storageProvider";
 import {
@@ -18,7 +19,7 @@ import { CgTrashEmpty } from "react-icons/cg";
 import { MdOutlineDriveFileMove } from "react-icons/md";
 
 interface Props {
-  selectedFiles: string[];
+  selectedFiles: FileProps[];
   onClose: () => void;
   paste: () => void;
 }
@@ -43,16 +44,17 @@ export default function FileListMenuModalContent({
 
   const download = async () => {
     try {
-      for (const fileName of selectedFiles) {
+      for (const file of selectedFiles) {
         const res = await axios.get(
-          `/api/storage/download?key=${router.query.path ?? ""}/${fileName}`,
+          `/api/storage/download?key=${router.query.path ?? ""}/${file.Name}`,
           { responseType: "arraybuffer" }
         );
         if (res.status === 200) {
           const blob = new Blob([res.data]);
           const link = document.createElement("a");
           link.href = URL.createObjectURL(blob);
-          link.download = fileName.includes(".") ? fileName : fileName + ".zip";
+          link.download =
+            file.MimeType == "dir" ? file.Name + ".zip" : file.Name;
           link.click();
           link.remove();
           toast({
@@ -75,9 +77,9 @@ export default function FileListMenuModalContent({
   };
 
   const remove = async () => {
-    const query = `keys[]=${router.query.path ?? ""}/${selectedFiles.join(
-      `&keys[]=${router.query.path ?? ""}/`
-    )}`;
+    const query = `keys[]=${router.query.path ?? ""}/${selectedFiles
+      .map((f) => f.Name)
+      .join(`&keys[]=${router.query.path ?? ""}/`)}`;
     const res = await axios.delete(`/api/storage/remove?${query}`);
     if (res.status === 200) {
       toast({

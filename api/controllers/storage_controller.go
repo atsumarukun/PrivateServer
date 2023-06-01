@@ -196,7 +196,7 @@ func (_ StorageController) Copy(c *gin.Context) {
 	var err error
 	for _, key := range query.Keys {
 		fileName := key[strings.LastIndex(key, "/"):]
-		if key[:strings.LastIndex(key, "/")] == body.Path[:strings.LastIndex(body.Path, "/")] {
+		if key[:strings.LastIndex(key, "/")] == body.Path {
 			newFile, err = os.Create(fmt.Sprintf("/go/src/api/storage/%s/%s", body.Path, strings.Replace(fileName, ".", " copy.", 1)))
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{

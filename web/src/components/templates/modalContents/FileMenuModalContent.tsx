@@ -1,3 +1,4 @@
+import { FileProps } from "@/constants/props";
 import { FileMenuStatus } from "@/constants/status";
 import {
   Button,
@@ -20,13 +21,13 @@ import {
 } from "react-icons/md";
 
 interface Props {
-  fileName: string;
+  file: FileProps;
   onClose: () => void;
   setStatus: Dispatch<SetStateAction<number>>;
 }
 
 export default function FileMenuModalContent({
-  fileName,
+  file,
   onClose,
   setStatus,
 }: Props) {
@@ -35,7 +36,7 @@ export default function FileMenuModalContent({
 
   const download = async () => {
     const res = await axios.get(
-      `/api/storage/download?key=${router.query.path ?? ""}/${fileName}`,
+      `/api/storage/download?key=${router.query.path ?? ""}/${file.Name}`,
       { responseType: "arraybuffer" }
     );
     if (res.status === 200) {
@@ -43,7 +44,8 @@ export default function FileMenuModalContent({
         const blob = new Blob([res.data]);
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
-        link.download = fileName.includes(".") ? fileName : fileName + ".zip";
+        link.download =
+          file.MimeType === "dir" ? file.Name + ".zip" : file.Name;
         link.click();
         link.remove();
         toast({
@@ -73,7 +75,7 @@ export default function FileMenuModalContent({
 
   return (
     <ModalContent mx="5">
-      <ModalHeader>{fileName}</ModalHeader>
+      <ModalHeader>{file.Name}</ModalHeader>
       <ModalCloseButton />
       <ModalBody>
         <VStack alignItems="start" w="40%" mx="auto">

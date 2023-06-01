@@ -34,7 +34,7 @@ import UploadFileModalContent from "./modalContents/UploadFileModalContent";
 import ContextMenuModalContent from "./modalContents/ContextMenuModalContent";
 
 export default function FileList({ files }: StorageProps) {
-  const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<FileProps[]>([]);
   const [previewFile, setPreviewFile] = useState<FileProps>();
   const [status, setStatus] = useState(ContextMenuStatus.default);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -48,9 +48,9 @@ export default function FileList({ files }: StorageProps) {
     if (e.ctrlKey) {
       // ファイル選択(ctrlを押しながらクリック)
       setSelectedFiles((files) =>
-        files.includes(file.Name)
-          ? files.filter((v) => v !== file.Name)
-          : [...files, file.Name]
+        files.includes(file)
+          ? files.filter((v) => v !== file)
+          : [...files, file]
       );
     } else {
       if (
@@ -58,7 +58,7 @@ export default function FileList({ files }: StorageProps) {
         context.status === FileSelectStatus.default
       ) {
         // 選択ファイル変更(通常クリック)
-        setSelectedFiles([file.Name]);
+        setSelectedFiles([file]);
       } else {
         // ファイル表示(通常クリック)
         if (file.MimeType === "dir") {
@@ -81,9 +81,9 @@ export default function FileList({ files }: StorageProps) {
   };
 
   const onKeyDown = async (e: KeyboardEvent<HTMLDivElement>) => {
-    const query = `keys[]=${router.query.path ?? ""}/${selectedFiles.join(
-      `&keys[]=${router.query.path ?? ""}/`
-    )}`;
+    const query = `keys[]=${router.query.path ?? ""}/${selectedFiles
+      .map((f) => f.Name)
+      .join(`&keys[]=${router.query.path ?? ""}/`)}`;
     if (e.key === "Delete") {
       const res = await axios.delete(`/api/storage/remove?${query}`);
       if (res.status === 200) {
@@ -154,9 +154,9 @@ export default function FileList({ files }: StorageProps) {
 
   const paste = async () => {
     if (context.status === FileSelectStatus.copy) {
-      const query = `keys[]=${context.filePath}/${context.globalFiles.join(
-        `&keys[]=${context.filePath}/`
-      )}`;
+      const query = `keys[]=${context.filePath}/${context.globalFiles
+        .map((f) => f.Name)
+        .join(`&keys[]=${context.filePath}/`)}`;
       const res = await axios.put(
         `/api/storage/copy?${query}`,
         JSON.stringify({ path: router.query.path ?? "/" }),
@@ -178,9 +178,9 @@ export default function FileList({ files }: StorageProps) {
         });
       }
     } else if (context.status === FileSelectStatus.move) {
-      const query = `keys[]=${context.filePath}/${context.globalFiles.join(
-        `&keys[]=${context.filePath}/`
-      )}`;
+      const query = `keys[]=${context.filePath}/${context.globalFiles
+        .map((f) => f.Name)
+        .join(`&keys[]=${context.filePath}/`)}`;
       const res = await axios.put(
         `/api/storage/move?${query}`,
         JSON.stringify({ path: router.query.path ?? "/" }),
@@ -266,10 +266,10 @@ export default function FileList({ files }: StorageProps) {
             return (
               <StorageCardWrapper
                 tabIndex={0}
-                fileName={f.Name}
+                file={f}
                 onKeyDown={(e) => onKeyDown(e)}
                 onClick={(e) => onClick(f, e)}
-                border={selectedFiles.includes(f.Name) ? "solid 2px gray" : ""}
+                border={selectedFiles.includes(f) ? "solid 2px gray" : ""}
                 key={i}
               >
                 <ImageCard
@@ -285,10 +285,10 @@ export default function FileList({ files }: StorageProps) {
             return (
               <StorageCardWrapper
                 tabIndex={0}
-                fileName={f.Name}
+                file={f}
                 onKeyDown={(e) => onKeyDown(e)}
                 onClick={(e) => onClick(f, e)}
-                border={selectedFiles.includes(f.Name) ? "solid 2px gray" : ""}
+                border={selectedFiles.includes(f) ? "solid 2px gray" : ""}
                 key={i}
               >
                 <IconCard text={f.Name} Icon={AiFillFolder} />
@@ -307,10 +307,10 @@ export default function FileList({ files }: StorageProps) {
             return (
               <StorageCardWrapper
                 tabIndex={0}
-                fileName={f.Name}
+                file={f}
                 onKeyDown={(e) => onKeyDown(e)}
                 onClick={(e) => onClick(f, e)}
-                border={selectedFiles.includes(f.Name) ? "solid 2px gray" : ""}
+                border={selectedFiles.includes(f) ? "solid 2px gray" : ""}
                 key={i}
               >
                 <IconCard text={f.Name} Icon={Icon} />

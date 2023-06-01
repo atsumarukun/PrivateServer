@@ -13,12 +13,13 @@ import RemoveFileModalContent from "./modalContents/RemoveFileModalContent";
 import MoveFileModalContent from "./modalContents/MoveFileModalContent";
 import CopyFileModalContent from "./modalContents/CopyFileModalContent";
 import { FileMenuStatus } from "@/constants/status";
+import { FileProps } from "@/constants/props";
 
 interface Props {
-  fileName: string;
+  file: FileProps;
 }
 
-export default function FileMenuModal({ fileName }: Props) {
+export default function FileMenuModal({ file }: Props) {
   const [status, setStatus] = useState(FileMenuStatus.default);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const finalRef = useRef(null);
@@ -54,22 +55,22 @@ export default function FileMenuModal({ fileName }: Props) {
         <ModalOverlay />
         {status === FileMenuStatus.default && (
           <FileMenuModalContent
-            fileName={fileName}
+            file={file}
             onClose={handleClose}
             setStatus={setStatus}
           />
         )}
         {status === FileMenuStatus.rename && (
-          <RenameFileModalContent fileName={fileName} onClose={handleClose} />
+          <RenameFileModalContent file={file} onClose={handleClose} />
         )}
         {status === FileMenuStatus.move && (
-          <MoveFileModalContent fileName={fileName} onClose={handleClose} />
+          <MoveFileModalContent fileName={file.Name} onClose={handleClose} />
         )}
         {status === FileMenuStatus.copy && (
-          <CopyFileModalContent fileName={fileName} onClose={handleClose} />
+          <CopyFileModalContent fileName={file.Name} onClose={handleClose} />
         )}
         {status === FileMenuStatus.remove && (
-          <RemoveFileModalContent fileName={fileName} onClose={handleClose} />
+          <RemoveFileModalContent fileName={file.Name} onClose={handleClose} />
         )}
       </Modal>
     </>

@@ -1,12 +1,13 @@
 import { Box } from "@chakra-ui/react";
 import { KeyboardEventHandler, MouseEventHandler, ReactNode } from "react";
 import FileMenuModal from "../templates/FileMenuModal";
+import { FileProps } from "@/constants/props";
 
 interface Props {
   children: ReactNode;
   border: string;
   tabIndex: number;
-  fileName: string;
+  file: FileProps;
   onClick: MouseEventHandler<HTMLDivElement>;
   onKeyDown: KeyboardEventHandler<HTMLDivElement>;
 }
@@ -15,13 +16,13 @@ export default function StorageCardWrapper({
   children,
   border,
   tabIndex,
-  fileName,
+  file,
   onClick,
   onKeyDown,
 }: Props) {
   return (
     <Box>
-      <FileMenuModal fileName={fileName} />
+      <FileMenuModal file={file} />
       <Box
         border={border}
         tabIndex={tabIndex}

@@ -1,3 +1,4 @@
+import { FileProps } from "@/constants/props";
 import { FileSelectStatus } from "@/constants/status";
 import {
   Dispatch,
@@ -12,8 +13,8 @@ interface Props {
 }
 
 interface StorageContextProps {
-  globalFiles: string[];
-  setGlobalFiles: Dispatch<SetStateAction<string[]>>;
+  globalFiles: FileProps[];
+  setGlobalFiles: Dispatch<SetStateAction<FileProps[]>>;
   filePath: string;
   setFilePath: Dispatch<SetStateAction<string>>;
   status: number;
@@ -30,7 +31,7 @@ export const StorageContext = createContext<StorageContextProps>({
 });
 
 export default function StorageProvider({ children }: Props) {
-  const [globalFiles, setGlobalFiles] = useState<string[]>([]);
+  const [globalFiles, setGlobalFiles] = useState<FileProps[]>([]);
   const [filePath, setFilePath] = useState<string>("");
   const [status, setStatus] = useState(FileSelectStatus.default);
 
