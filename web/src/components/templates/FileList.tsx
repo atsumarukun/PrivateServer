@@ -14,7 +14,7 @@ import { IconType } from "react-icons";
 import { AiFillFolder, AiFillFile } from "react-icons/ai";
 import { BsMusicNoteBeamed } from "react-icons/bs";
 import { MdMovie } from "react-icons/md";
-import StorageCardWrapper from "../parts/StorageCardWrapper";
+import StorageCardWrapper from "../parts/FileCardWrapper";
 import {
   KeyboardEvent,
   MouseEvent,
