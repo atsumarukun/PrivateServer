@@ -15,6 +15,9 @@ web/.env
 # private key
 api/PrivateServer
 
+# password file
+api/Password
+
 # environment file
 api/.env
 
