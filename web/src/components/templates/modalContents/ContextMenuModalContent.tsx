@@ -11,13 +11,22 @@ import {
 import { Dispatch, SetStateAction } from "react";
 import { AiOutlineUpload } from "react-icons/ai";
 import { MdOutlineCreateNewFolder } from "react-icons/md";
-import { BiHide } from "react-icons/bi";
+import { BiHide, BiShow } from "react-icons/bi";
+import { parseCookies, destroyCookie } from "nookies";
+import { useRouter } from "next/router";
 
 interface Props {
   onClick: Dispatch<SetStateAction<number>>;
 }
 
 export default function ContextMenuModalContent({ onClick }: Props) {
+  const router = useRouter();
+
+  const hideFile = () => {
+    destroyCookie(null, "token");
+    router.reload();
+  };
+
   return (
     <ModalContent mx="5">
       <ModalHeader>メニュー</ModalHeader>
@@ -42,15 +51,24 @@ export default function ContextMenuModalContent({ onClick }: Props) {
               ファイルのアップロード
             </Text>
           </Button>
-          <Button
-            variant="ghost"
-            onClick={() => onClick(ContextMenuStatus.show)}
-          >
-            <BiHide size="25" />
-            <Text fontWeight="400" ml="2">
-              隠しファイルの表示
-            </Text>
-          </Button>
+          {parseCookies().token ? (
+            <Button variant="ghost" onClick={hideFile}>
+              <BiHide size="25" />
+              <Text fontWeight="400" ml="2">
+                隠しファイルの非表示
+              </Text>
+            </Button>
+          ) : (
+            <Button
+              variant="ghost"
+              onClick={() => onClick(ContextMenuStatus.show)}
+            >
+              <BiShow size="25" />
+              <Text fontWeight="400" ml="2">
+                隠しファイルの表示
+              </Text>
+            </Button>
+          )}
         </VStack>
       </ModalBody>
     </ModalContent>
