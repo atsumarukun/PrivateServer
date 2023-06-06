@@ -11,6 +11,7 @@ var (
 	Host string
 	User string
 	Port string
+	JwtSecretKey string
 )
 
 func init() {
@@ -22,4 +23,6 @@ func init() {
 	Host = os.Getenv("HOST")
 	User = os.Getenv("HOST_USER")
 	Port = os.Getenv("HOST_PORT")
+
+	JwtSecretKey = os.Getenv("JWT_SECRET_KEY")
 }

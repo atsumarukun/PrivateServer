@@ -32,6 +32,7 @@ import PreviewFileModalContent from "./modalContents/PreviewFileModalContent";
 import CreateDirModalContent from "./modalContents/CreateDirModalContent";
 import UploadFileModalContent from "./modalContents/UploadFileModalContent";
 import ContextMenuModalContent from "./modalContents/ContextMenuModalContent";
+import ShowHideFileModalContent from "./modalContents/ShowHideFileModalContent";
 
 export default function FileList({ files }: StorageProps) {
   const [selectedFiles, setSelectedFiles] = useState<FileProps[]>([]);
@@ -347,6 +348,7 @@ export default function FileList({ files }: StorageProps) {
               <CreateDirModalContent onClose={handleClose} />
             )}
             {status === ContextMenuStatus.upload && <UploadFileModalContent />}
+            {status === ContextMenuStatus.show && <ShowHideFileModalContent />}
           </>
         )}
       </Modal>

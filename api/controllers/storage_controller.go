@@ -21,15 +21,29 @@ func (_ StorageController) Get(c *gin.Context) {
 		Name string
 		MimeType string
 	}
+	var fs []File
+
+	serv := services.AuthService{}
+	if strings.Contains(c.Query("path"), ".") && !serv.Guard(c) {
+		c.JSON(http.StatusOK, gin.H{
+			"files": fs,
+		})
+		return	
+	}
     files, err := ioutil.ReadDir(fmt.Sprintf("/go/src/api/storage/%s", c.Query("path")))
     if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err,
 		})
     }
-	var fs []File
+
 	for _, file := range files {
-		if !file.IsDir() {
+		if file.Name()[0:1] == "." && !serv.Guard(c) {
+			continue
+		}
+		if file.IsDir() {
+			fs = append(fs, File{file.Name(), "dir"})
+		} else {
 			bytes, err := os.ReadFile(fmt.Sprintf("/go/src/api/storage/%s/%s", c.Query("path"), file.Name()))
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{
@@ -37,8 +51,6 @@ func (_ StorageController) Get(c *gin.Context) {
 				})
 			}	
 			fs = append(fs, File{file.Name(), http.DetectContentType(bytes)})
-		} else {
-			fs = append(fs, File{file.Name(), "dir"})
 		}
 	}
 	c.JSON(http.StatusOK, gin.H{

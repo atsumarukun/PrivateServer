@@ -16,4 +16,5 @@ export const ContextMenuStatus = {
   default: 0,
   create: 1,
   upload: 2,
+  show: 3,
 };

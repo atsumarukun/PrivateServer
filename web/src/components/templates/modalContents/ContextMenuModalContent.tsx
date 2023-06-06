@@ -11,6 +11,7 @@ import {
 import { Dispatch, SetStateAction } from "react";
 import { AiOutlineUpload } from "react-icons/ai";
 import { MdOutlineCreateNewFolder } from "react-icons/md";
+import { BiHide } from "react-icons/bi";
 
 interface Props {
   onClick: Dispatch<SetStateAction<number>>;
@@ -39,6 +40,15 @@ export default function ContextMenuModalContent({ onClick }: Props) {
             <AiOutlineUpload size="25" />
             <Text fontWeight="400" ml="2">
               ファイルのアップロード
+            </Text>
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => onClick(ContextMenuStatus.show)}
+          >
+            <BiHide size="25" />
+            <Text fontWeight="400" ml="2">
+              隠しファイルの表示
             </Text>
           </Button>
         </VStack>

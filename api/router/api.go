@@ -32,6 +32,11 @@ func Router() *gin.Engine {
 			s.PUT("/move", ctrl.Move)
 			s.PUT("/copy", ctrl.Copy)
 		}
+		a := v.Group("/auth")
+		{
+			ctrl := controllers.AuthController{}
+			a.POST("/", ctrl.Verification)
+		}
 	}
 
 	return r
