@@ -15,27 +15,32 @@ func Router() *gin.Engine {
 	r := gin.Default()
 	v := r.Group("/v1")
 	{
-		p := v.Group("/power")
+		power := v.Group("/power")
 		{
 			ctrl := controllers.PowerController{}
-			p.GET("/shutdown", ctrl.Shutdown)
+			power.GET("/shutdown", ctrl.Shutdown)
 		}
-		s := v.Group("/storage")
+		storage := v.Group("/storage")
 		{
 			ctrl := controllers.StorageController{}
-			s.GET("/", ctrl.Get)
-			s.POST("/", ctrl.Upload)
-			s.PUT("/", ctrl.Rename)
-			s.DELETE("/", ctrl.Remove)
-			s.GET("/download", ctrl.Download)
-			s.POST("/create", ctrl.Create)
-			s.PUT("/move", ctrl.Move)
-			s.PUT("/copy", ctrl.Copy)
+			storage.GET("/", ctrl.Get)
+			storage.POST("/", ctrl.Upload)
+			storage.PUT("/", ctrl.Rename)
+			storage.DELETE("/", ctrl.Remove)
+			storage.GET("/download", ctrl.Download)
+			storage.POST("/create", ctrl.Create)
+			storage.PUT("/move", ctrl.Move)
+			storage.PUT("/copy", ctrl.Copy)
 		}
-		a := v.Group("/auth")
+		auth := v.Group("/auth")
 		{
 			ctrl := controllers.AuthController{}
-			a.POST("/", ctrl.Verification)
+			auth.POST("/", ctrl.Verification)
+		}
+		service := v.Group("/service")
+		{
+			ctrl := controllers.ServiceController{}
+			service.GET("/", ctrl.Get)
 		}
 	}
 
