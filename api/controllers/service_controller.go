@@ -38,3 +38,30 @@ func (_ ServiceController) Get(c *gin.Context) {
 		"services": data,
 	})
 }
+
+
+func (_ ServiceController) Stop(c *gin.Context) {
+	serv := services.SshService{}
+	if err := serv.Run(fmt.Sprintf("cd %s && docker-compose stop", c.Query("path"))); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err,
+		})
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"path": c.Query("path"),
+	})
+}
+
+func (_ ServiceController) Start(c *gin.Context) {
+	serv := services.SshService{}
+	if err := serv.Run(fmt.Sprintf("cd %s && docker-compose start", c.Query("path"))); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err,
+		})
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"path": c.Query("path"),
+	})
+}

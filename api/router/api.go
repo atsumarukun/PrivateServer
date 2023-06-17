@@ -41,6 +41,8 @@ func Router() *gin.Engine {
 		{
 			ctrl := controllers.ServiceController{}
 			service.GET("/", ctrl.Get)
+			service.PUT("/stop", ctrl.Stop)
+			service.PUT("/start", ctrl.Start)
 		}
 	}
 
