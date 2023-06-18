@@ -51,7 +51,7 @@ export default function Service({ services }: Props) {
     onClose();
     if (res.status === 200) {
       toast({
-        title: "アップロードしました.",
+        title: "更新しました.",
         status: "success",
         duration: 200,
         isClosable: true,
