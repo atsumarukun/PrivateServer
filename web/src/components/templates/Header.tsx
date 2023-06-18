@@ -45,9 +45,8 @@ export default function Header() {
         </Link>
         <Alert
           onClick={onClick}
-          Icon={CiPower}
+          ModalButton={<CiPower size="30" />}
           message={alertMessage}
-          size="30"
         />
       </HStack>
     </header>

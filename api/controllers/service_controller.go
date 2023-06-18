@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"strings"
 	"net/http"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
@@ -42,7 +43,7 @@ func (_ ServiceController) Get(c *gin.Context) {
 
 func (_ ServiceController) Stop(c *gin.Context) {
 	serv := services.SshService{}
-	if err := serv.Run(fmt.Sprintf("cd %s && docker-compose stop", c.Query("path"))); err != nil {
+	if err := serv.Run(fmt.Sprintf("cd %s && docker-compose stop", c.Query("path")[:strings.LastIndex(c.Query("path"), "/")])); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err,
 		})
@@ -55,7 +56,7 @@ func (_ ServiceController) Stop(c *gin.Context) {
 
 func (_ ServiceController) Start(c *gin.Context) {
 	serv := services.SshService{}
-	if err := serv.Run(fmt.Sprintf("cd %s && docker-compose start", c.Query("path"))); err != nil {
+	if err := serv.Run(fmt.Sprintf("cd %s && docker-compose start", c.Query("path")[:strings.LastIndex(c.Query("path"), "/")])); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err,
 		})

@@ -4,9 +4,10 @@ import { IconType } from "react-icons";
 interface Props {
   Icon: IconType;
   text?: string;
+  color?: string;
 }
 
-export default function IconCard({ Icon, text }: Props) {
+export default function IconCard({ Icon, text, color }: Props) {
   return (
     <AspectRatio ratio={1 / 1}>
       <GridItem bgColor="gray.100">
@@ -15,7 +16,7 @@ export default function IconCard({ Icon, text }: Props) {
           <Text
             position="absolute"
             color="white"
-            bgColor="blackAlpha.500"
+            bgColor={color ?? "blackAlpha.500"}
             bottom="0"
             w="100%"
             textAlign="center"

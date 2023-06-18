@@ -10,20 +10,18 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useRef } from "react";
-import { IconType } from "react-icons";
+import { ReactNode, useRef } from "react";
 
 interface Props {
   onClick: () => void;
-  Icon: IconType;
+  ModalButton: ReactNode;
   message: {
     title: string;
     body: string;
   };
-  size?: string;
 }
 
-export default function Alert({ onClick, Icon, message, size }: Props) {
+export default function Alert({ onClick, ModalButton, message }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef(null);
 
@@ -34,9 +32,7 @@ export default function Alert({ onClick, Icon, message, size }: Props) {
 
   return (
     <>
-      <button onClick={onOpen}>
-        <Icon size={size} />
-      </button>
+      <button onClick={onOpen}>{ModalButton}</button>
       <AlertDialog
         motionPreset="slideInBottom"
         leastDestructiveRef={cancelRef}
