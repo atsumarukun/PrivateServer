@@ -15,7 +15,7 @@ export default function MenuCard() {
       <Link href="/service">
         <VStack>
           <IoIosApps size="75" />
-          <Text>Sservice</Text>
+          <Text>Service</Text>
         </VStack>
       </Link>
     </HStack>
